@@ -1,30 +1,46 @@
-"use client"
+'use client'
 
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Sparkles, ArrowRight, User, Briefcase, Building2, Users } from "lucide-react"
+import { useState } from 'react'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Sparkles, ArrowRight, User, Building2 } from 'lucide-react'
 
 interface OnboardingProps {
   onComplete: () => void
 }
 
+const ANIMALS = [
+  { id: 'fox', label: 'Fox', emoji: '🦊' },
+  { id: 'owl', label: 'Owl', emoji: '🦉' },
+  { id: 'lion', label: 'Lion', emoji: '🦁' },
+  { id: 'wolf', label: 'Wolf', emoji: '🐺' },
+  { id: 'eagle', label: 'Eagle', emoji: '🦅' },
+  { id: 'shark', label: 'Shark', emoji: '🦈' },
+  { id: 'bear', label: 'Bear', emoji: '🐻' },
+  { id: 'elephant', label: 'Elephant', emoji: '🐘' },
+]
+
 export function Onboarding({ onComplete }: OnboardingProps) {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [formData, setFormData] = useState({
-    fullName: "",
-    designation: "",
-    company: "",
-    roleAtCompany: "",
+    fullName: '',
+    company: '',
+    roleAtCompany: '',
+    avatar: '',
   })
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    
+
     if (!formData.fullName.trim()) {
-      setError("Please enter your name")
+      setError('Please enter your name')
+      return
+    }
+
+    if (!formData.avatar) {
+      setError('Please select an avatar')
       return
     }
 
@@ -32,25 +48,25 @@ export function Onboarding({ onComplete }: OnboardingProps) {
     setError(null)
 
     try {
-      const res = await fetch("/api/profile", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+      const res = await fetch('/api/profile', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           fullName: formData.fullName.trim(),
-          designation: formData.designation.trim() || null,
           company: formData.company.trim() || null,
           roleAtCompany: formData.roleAtCompany.trim() || null,
+          avatar: formData.avatar,
         }),
       })
 
       if (!res.ok) {
         const data = await res.json()
-        throw new Error(data.error || "Failed to save profile")
+        throw new Error(data.error || 'Failed to save profile')
       }
 
       onComplete()
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Something went wrong")
+      setError(err instanceof Error ? err.message : 'Something went wrong')
     } finally {
       setLoading(false)
     }
@@ -63,10 +79,7 @@ export function Onboarding({ onComplete }: OnboardingProps) {
   return (
     <main className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-background px-6">
       {/* Premium grid background */}
-      <div
-        aria-hidden="true"
-        className="bg-grid-pattern bg-grid-fade pointer-events-none absolute inset-0 -z-10"
-      />
+      <div aria-hidden="true" className="bg-grid-pattern bg-grid-fade pointer-events-none absolute inset-0 -z-10" />
 
       {/* Ambient glow */}
       <div
@@ -79,9 +92,7 @@ export function Onboarding({ onComplete }: OnboardingProps) {
           <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-primary/70 text-primary-foreground shadow-lg shadow-primary/20">
             <Sparkles className="h-6 w-6" aria-hidden="true" />
           </div>
-          <h1 className="text-2xl font-semibold tracking-tight text-foreground">
-            Welcome to Kairos
-          </h1>
+          <h1 className="text-2xl font-semibold tracking-tight text-foreground">Welcome to Kairos</h1>
           <p className="mt-2 text-sm text-muted-foreground">
             Tell us a bit about yourself so we can personalize your experience.
           </p>
@@ -98,24 +109,9 @@ export function Onboarding({ onComplete }: OnboardingProps) {
               type="text"
               placeholder="John Doe"
               value={formData.fullName}
-              onChange={handleChange("fullName")}
+              onChange={handleChange('fullName')}
               className="h-11"
               autoFocus
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="designation" className="flex items-center gap-2 text-sm">
-              <Briefcase className="h-3.5 w-3.5 text-muted-foreground" />
-              Designation
-            </Label>
-            <Input
-              id="designation"
-              type="text"
-              placeholder="e.g. Customer Success Manager"
-              value={formData.designation}
-              onChange={handleChange("designation")}
-              className="h-11"
             />
           </div>
 
@@ -129,24 +125,46 @@ export function Onboarding({ onComplete }: OnboardingProps) {
               type="text"
               placeholder="e.g. Acme Inc."
               value={formData.company}
-              onChange={handleChange("company")}
+              onChange={handleChange('company')}
               className="h-11"
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="roleAtCompany" className="flex items-center gap-2 text-sm">
-              <Users className="h-3.5 w-3.5 text-muted-foreground" />
-              Your role at the company
-            </Label>
+            <Label htmlFor="roleAtCompany" className="text-sm">Your role</Label>
             <Input
               id="roleAtCompany"
               type="text"
               placeholder="e.g. Leading a team of 5 CSMs"
               value={formData.roleAtCompany}
-              onChange={handleChange("roleAtCompany")}
+              onChange={handleChange('roleAtCompany')}
               className="h-11"
             />
+          </div>
+
+          {/* Avatar Picker */}
+          <div className="space-y-3">
+            <Label className="text-sm">
+              Choose your avatar <span className="text-destructive">*</span>
+            </Label>
+            <div className="grid grid-cols-4 gap-2">
+              {ANIMALS.map((animal) => (
+                <button
+                  key={animal.id}
+                  type="button"
+                  onClick={() => setFormData((prev) => ({ ...prev, avatar: animal.id }))}
+                  className={`flex h-16 flex-col items-center justify-center gap-1 rounded-lg border-2 transition-all ${
+                    formData.avatar === animal.id
+                      ? 'border-primary bg-primary/10'
+                      : 'border-border bg-card hover:border-border/80'
+                  }`}
+                  title={animal.label}
+                >
+                  <span className="text-2xl">{animal.emoji}</span>
+                  <span className="text-[10px] text-muted-foreground">{animal.label}</span>
+                </button>
+              ))}
+            </div>
           </div>
 
           {error && (
@@ -160,7 +178,7 @@ export function Onboarding({ onComplete }: OnboardingProps) {
             disabled={loading}
             className="w-full gap-2 bg-foreground text-background hover:bg-foreground/90"
           >
-            {loading ? "Saving..." : "Continue to Kairos"}
+            {loading ? 'Saving...' : 'Continue to Kairos'}
             {!loading && <ArrowRight className="h-4 w-4" />}
           </Button>
         </form>
