@@ -90,3 +90,17 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Premium SaaS grid pattern */
+.bg-grid-pattern {
+  background-image: 
+    linear-gradient(to right, oklch(0.28 0.01 60 / 0.4) 1px, transparent 1px),
+    linear-gradient(to bottom, oklch(0.28 0.01 60 / 0.4) 1px, transparent 1px);
+  background-size: 64px 64px;
+}
+
+/* Radial fade for grid */
+.bg-grid-fade {
+  mask-image: radial-gradient(ellipse 80% 70% at 50% 30%, black 20%, transparent 100%);
+  -webkit-mask-image: radial-gradient(ellipse 80% 70% at 50% 30%, black 20%, transparent 100%);
+}

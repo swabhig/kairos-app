@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { createClient } from "@/lib/supabase/client"
 import { Button } from "@/components/ui/button"
-import { Sparkles, Link2, Youtube, MessageSquare, ArrowRight } from "lucide-react"
+import { Sparkles, Link2, Youtube, MessageSquare, ArrowRight, ChevronDown } from "lucide-react"
 import { GoogleIcon } from "@/components/google-icon"
 
 export function Landing() {
@@ -31,22 +31,29 @@ export function Landing() {
 
   return (
     <main className="relative flex h-screen flex-col overflow-hidden bg-background">
-      <header className="flex shrink-0 items-center justify-between px-6 py-4 md:px-10">
-        <div className="flex items-center gap-2">
-          <div className="flex h-7 w-7 items-center justify-center rounded-md bg-primary text-primary-foreground">
-            <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
+      {/* Premium grid background */}
+      <div 
+        aria-hidden="true" 
+        className="bg-grid-pattern bg-grid-fade pointer-events-none absolute inset-0 -z-10"
+      />
+      
+      <header className="relative z-10 flex shrink-0 items-center justify-between px-6 py-4 md:px-10">
+        <div className="flex items-center gap-2.5">
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-primary to-primary/70 text-primary-foreground shadow-lg shadow-primary/20">
+            <Sparkles className="h-4 w-4" aria-hidden="true" />
           </div>
-          <span className="font-mono text-sm tracking-wide text-foreground">KAIROS</span>
+          <span className="font-mono text-sm font-medium tracking-wide text-foreground">KAIROS</span>
         </div>
         <Button variant="ghost" size="sm" onClick={handleGoogleSignIn} disabled={loading}>
           Sign in
         </Button>
       </header>
 
-      <section className="relative flex flex-1 flex-col items-center justify-center px-6">
+      <section className="relative z-10 flex flex-1 flex-col items-center justify-center px-6">
+        {/* Ambient glow */}
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute left-1/2 top-1/3 -z-0 h-[28rem] w-[28rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary/10 blur-3xl"
+          className="pointer-events-none absolute left-1/2 top-1/3 -z-0 h-[32rem] w-[32rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-gradient-to-br from-primary/20 via-primary/10 to-transparent blur-3xl"
         />
 
         <div className="relative z-10 mx-auto flex w-full max-w-3xl flex-col items-center text-center">
@@ -70,10 +77,11 @@ export function Landing() {
             Turn any article or video into dialogue.
           </p>
 
-          <div className="mt-8 flex flex-col items-center gap-3">
+          <div className="mt-8 flex flex-col items-center gap-2">
             <span className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
               Sign in to continue
             </span>
+            <ChevronDown className="h-4 w-4 animate-bounce text-muted-foreground" />
             <Button
               onClick={handleGoogleSignIn}
               disabled={loading}
