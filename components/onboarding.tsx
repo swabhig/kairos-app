@@ -131,11 +131,11 @@ export function Onboarding({ onComplete }: OnboardingProps) {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="roleAtCompany" className="text-sm">Your role</Label>
+            <Label htmlFor="roleAtCompany" className="text-sm">Your designation</Label>
             <Input
               id="roleAtCompany"
               type="text"
-              placeholder="e.g. Leading a team of 5 CSMs"
+              placeholder="e.g. Product Manager, Senior Engineer"
               value={formData.roleAtCompany}
               onChange={handleChange('roleAtCompany')}
               className="h-11"
@@ -153,7 +153,7 @@ export function Onboarding({ onComplete }: OnboardingProps) {
                   key={animal.id}
                   type="button"
                   onClick={() => setFormData((prev) => ({ ...prev, avatar: animal.id }))}
-                  className={`flex h-16 flex-col items-center justify-center gap-1 rounded-lg border-2 transition-all ${
+                  className={`flex h-14 items-center justify-center rounded-lg border-2 transition-all ${
                     formData.avatar === animal.id
                       ? 'border-primary bg-primary/10'
                       : 'border-border bg-card hover:border-border/80'
@@ -161,7 +161,6 @@ export function Onboarding({ onComplete }: OnboardingProps) {
                   title={animal.label}
                 >
                   <span className="text-2xl">{animal.emoji}</span>
-                  <span className="text-[10px] text-muted-foreground">{animal.label}</span>
                 </button>
               ))}
             </div>

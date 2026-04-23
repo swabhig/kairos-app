@@ -62,14 +62,12 @@ export function Landing() {
             MVP — Blogs & YouTube
           </span>
 
-          <h1 className="flex flex-col items-center gap-2 text-balance tracking-tight text-foreground md:gap-3">
-            <span className="text-5xl font-semibold leading-[0.95] md:text-7xl">Chat with</span>
-            <span className="relative inline-block font-[family-name:var(--font-cursive)] text-4xl font-normal leading-[1.1] text-primary md:text-6xl">
-              <span className="relative z-10 px-2">timeless wisdom</span>
-              <span
-                aria-hidden="true"
-                className="absolute inset-x-0 bottom-1 -z-0 h-3 bg-primary/30 md:bottom-2 md:h-5"
-              />
+          <h1 className="flex flex-col items-center gap-1 text-balance tracking-tight text-foreground md:gap-2">
+            <span className="text-4xl font-light tracking-tight md:text-5xl">Chat with</span>
+            <span className="relative inline-block text-4xl font-semibold leading-[1.1] md:text-6xl">
+              <span className="relative z-10 bg-gradient-to-r from-primary via-primary/90 to-primary/70 bg-clip-text text-transparent">
+                any newsletter
+              </span>
             </span>
           </h1>
 
