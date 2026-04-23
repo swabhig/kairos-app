@@ -73,14 +73,14 @@ export function Landing() {
             MVP — limited access
           </span>
 
-          <h1 className="flex flex-col items-center gap-2 text-balance tracking-tight text-foreground md:gap-3">
-            <span className="text-5xl font-bold tracking-tight md:text-7xl">
+          <h1 className="flex flex-col items-center gap-3 text-balance tracking-tight text-foreground md:gap-4">
+            <span className="bg-gradient-to-b from-foreground to-foreground/70 bg-clip-text text-5xl font-extrabold tracking-tight text-transparent md:text-7xl">
               Chat with any
             </span>
-            <span className="relative h-16 w-full overflow-hidden md:h-20">
+            <span className="relative flex h-20 items-center justify-center md:h-28">
               <span
                 key={wordIndex}
-                className="typewriter absolute inset-x-0 flex justify-center font-[family-name:var(--font-cursive)] text-5xl text-primary md:text-7xl"
+                className="typewriter inline-block font-[family-name:var(--font-cursive)] text-6xl text-primary md:text-8xl"
               >
                 {WORDS[wordIndex]}
               </span>
