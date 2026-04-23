@@ -53,7 +53,7 @@ export function Landing() {
           <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-primary to-primary/70 text-primary-foreground shadow-lg shadow-primary/20">
             <Sparkles className="h-4 w-4" aria-hidden="true" />
           </div>
-          <span className="font-mono text-sm font-medium tracking-wide text-foreground">KAIROS</span>
+          <span className="font-mono text-sm font-medium tracking-wide text-foreground">VERBE</span>
         </div>
         <Button variant="ghost" size="sm" onClick={handleGoogleSignIn} disabled={loading}>
           Sign in

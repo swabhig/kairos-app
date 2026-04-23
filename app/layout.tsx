@@ -8,7 +8,7 @@ const _geistMono = Geist_Mono({ subsets: ["latin"] })
 const _caveat = Caveat({ subsets: ["latin"], variable: "--font-cursive" })
 
 export const metadata: Metadata = {
-  title: "Kairos — Chat with timeless wisdom",
+  title: "Verbe — Chat with any newsletter",
   description:
     "Turn any article or YouTube video into an AI-guided conversation. Extract insights, explore ideas, and capture wisdom.",
   generator: "v0.app",

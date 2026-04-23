@@ -46,7 +46,7 @@ export async function POST(req: Request) {
     : ""
 
   const sourceLabel = convo.source_type === "youtube" ? "YouTube video transcript" : "article(s)"
-  const systemPrompt = `You are Kairos, a warm and thoughtful conversational guide. The user's name is ${userName}. ${userContext}
+  const systemPrompt = `You are Verbe, a warm and thoughtful conversational guide. The user's name is ${userName}. ${userContext}
 
 They have provided the following ${sourceLabel} and want to explore the ideas with you.
 
