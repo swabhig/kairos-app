@@ -51,9 +51,9 @@ export function ChatView({ conversation, user }: { conversation: ActiveConversat
       : []
 
   return (
-    <div className="flex h-[calc(100vh)] flex-1 flex-col md:h-screen">
+    <div className="flex h-screen flex-1 flex-col overflow-hidden">
       {/* Source header */}
-      <div className="border-b border-border bg-card/40 px-4 py-3 md:px-6">
+      <div className="shrink-0 border-b border-border bg-card/40 px-4 py-3 md:px-6">
         <div className="mx-auto flex max-w-3xl items-start gap-3">
           <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-primary/15 text-primary">
             <SourceIcon className="h-3.5 w-3.5" aria-hidden="true" />
@@ -117,7 +117,7 @@ export function ChatView({ conversation, user }: { conversation: ActiveConversat
       </div>
 
       {/* Composer */}
-      <div className="border-t border-border bg-card/40 px-4 py-4 md:px-6">
+      <div className="shrink-0 border-t border-border bg-card/40 px-4 py-4 md:px-6">
         <form onSubmit={handleSubmit} className="mx-auto flex max-w-3xl items-end gap-2">
           <textarea
             value={input}
