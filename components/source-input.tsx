@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button"
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group"
 import { Sparkles, Link2, Youtube, ArrowRight, Loader2 } from "lucide-react"
 import { Progress } from "@/components/ui/progress"
+import { Footer } from "@/components/footer"
 
 type CreatedConversation = {
   id: string
@@ -23,7 +24,7 @@ type CrawlProgress = {
   message: string
 }
 
-export function SourceInput({ onCreated }: { onCreated: (c: CreatedConversation) => void }) {
+export function SourceInput({ onCreated, userName }: { onCreated: (c: CreatedConversation) => void; userName?: string | null }) {
   const [url, setUrl] = useState("")
   const [loading, setLoading] = useState(false)
   const [progress, setProgress] = useState<CrawlProgress | null>(null)
@@ -101,14 +102,15 @@ export function SourceInput({ onCreated }: { onCreated: (c: CreatedConversation)
   const progressPercent = progress?.total ? Math.round((progress.current / progress.total) * 100) : 0
 
   return (
-    <section className="flex flex-1 flex-col items-center justify-center px-4 py-10 md:px-8">
-      <div className="flex w-full max-w-2xl flex-col items-center text-center">
+    <div className="flex flex-1 flex-col">
+      <section className="flex flex-1 flex-col items-center justify-center px-4 py-10 md:px-8">
+        <div className="flex w-full max-w-2xl flex-col items-center text-center">
         <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-primary/15 text-primary">
           <Sparkles className="h-5 w-5" aria-hidden="true" />
         </div>
 
         <h1 className="text-balance text-3xl font-semibold tracking-tight text-foreground md:text-4xl">
-          What do you want to understand today?
+          {userName ? `${userName}, what do you want to explore?` : "What do you want to explore today?"}
         </h1>
         <p className="mt-3 max-w-lg text-pretty text-sm leading-relaxed text-muted-foreground md:text-base">
           Paste an author page, blog post, or YouTube link. Kairos will index all their content so you can chat with
@@ -172,8 +174,10 @@ export function SourceInput({ onCreated }: { onCreated: (c: CreatedConversation)
             body="We pull the transcript from videos that have captions enabled."
           />
         </div>
-      </div>
-    </section>
+        </div>
+      </section>
+      <Footer />
+    </div>
   )
 }
 

@@ -1,14 +1,25 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { createClient } from "@/lib/supabase/client"
 import { Button } from "@/components/ui/button"
 import { Sparkles, Link2, Youtube, MessageSquare, ArrowRight, ChevronDown } from "lucide-react"
 import { GoogleIcon } from "@/components/google-icon"
+import { Footer } from "@/components/footer"
+
+const WORDS = ["newsletters", "podcasts", "articles", "blogs"]
 
 export function Landing() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [wordIndex, setWordIndex] = useState(0)
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setWordIndex((prev) => (prev + 1) % WORDS.length)
+    }, 2000)
+    return () => clearInterval(interval)
+  }, [])
 
   async function handleGoogleSignIn() {
     setLoading(true)
@@ -59,14 +70,17 @@ export function Landing() {
         <div className="relative z-10 mx-auto flex w-full max-w-3xl flex-col items-center text-center">
           <span className="mb-5 inline-flex items-center gap-2 rounded-full border border-border bg-card px-3 py-1 text-xs text-muted-foreground">
             <span className="h-1.5 w-1.5 rounded-full bg-primary" aria-hidden="true" />
-            MVP — Blogs & YouTube
+            MVP — limited access
           </span>
 
           <h1 className="flex flex-col items-center gap-1 text-balance tracking-tight text-foreground md:gap-2">
-            <span className="text-4xl font-light tracking-tight md:text-5xl">Chat with</span>
-            <span className="relative inline-block text-4xl font-semibold leading-[1.1] md:text-6xl">
-              <span className="relative z-10 bg-gradient-to-r from-primary via-primary/90 to-primary/70 bg-clip-text text-transparent">
-                any newsletter
+            <span className="text-4xl font-light tracking-tight md:text-5xl">Chat with any</span>
+            <span className="relative h-14 overflow-hidden md:h-16">
+              <span
+                key={wordIndex}
+                className="animate-slide-up block font-[family-name:var(--font-cursive)] text-4xl text-primary md:text-6xl"
+              >
+                {WORDS[wordIndex]}
               </span>
             </span>
           </h1>
@@ -114,18 +128,7 @@ export function Landing() {
         </div>
       </section>
 
-      <footer className="shrink-0 border-t border-border px-6 py-4 text-center text-xs text-muted-foreground md:px-10">
-        An effort to give back to the CS community. For feedback, connect on{" "}
-        <a
-          href="https://wa.me/919810040184"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-foreground underline underline-offset-4 hover:text-primary"
-        >
-          WhatsApp
-        </a>
-        .
-      </footer>
+      <Footer />
     </main>
   )
 }
