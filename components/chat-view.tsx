@@ -26,8 +26,13 @@ export function ChatView({ conversation, user }: { conversation: ActiveConversat
   })
 
   useEffect(() => {
-    scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" })
-  }, [messages])
+    // Auto-scroll to bottom when messages change
+    if (scrollRef.current) {
+      setTimeout(() => {
+        scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" })
+      }, 0)
+    }
+  }, [messages.length, status])
 
   const busy = status === "submitted" || status === "streaming"
 

@@ -109,7 +109,7 @@ export function KairosApp({
   }
 
   return (
-    <div className="flex min-h-screen bg-background">
+    <div className="flex h-screen overflow-hidden bg-background">
       <ConversationSidebar
         user={user}
         conversations={conversations}
