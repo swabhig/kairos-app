@@ -1,5 +1,4 @@
 import { convertToModelMessages, streamText, type UIMessage } from "ai"
-import { groq } from "@ai-sdk/groq"
 import { createClient } from "@/lib/supabase/server"
 
 export const maxDuration = 60
@@ -37,13 +36,13 @@ export async function POST(req: Request) {
   // Load user profile for personalization
   const { data: profile } = await supabase
     .from("profiles")
-    .select("full_name, designation, company, role_at_company")
+    .select("full_name, company, role_at_company")
     .eq("id", user.id)
     .single()
 
   const userName = profile?.full_name ?? "there"
-  const userContext = profile?.designation || profile?.company
-    ? `The user${profile.full_name ? ` (${profile.full_name})` : ""} is a ${profile.designation || "professional"}${profile.company ? ` at ${profile.company}` : ""}${profile.role_at_company ? `, ${profile.role_at_company}` : ""}.`
+  const userContext = profile?.company
+    ? `The user${profile.full_name ? ` (${profile.full_name})` : ""} is ${profile.role_at_company || "a professional"}${profile.company ? ` at ${profile.company}` : ""}.`
     : ""
 
   const sourceLabel = convo.source_type === "youtube" ? "YouTube video transcript" : "article(s)"
@@ -65,7 +64,7 @@ Guidelines:
 - Use markdown for structure (short headings, bullet lists, bold for emphasis) when it aids readability.`
 
   const result = streamText({
-    model: groq("llama-3.3-70b-versatile"),
+    model: "openai/gpt-4-turbo",
     system: systemPrompt,
     messages: await convertToModelMessages(messages),
   })
