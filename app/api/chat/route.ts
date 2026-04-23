@@ -34,8 +34,22 @@ export async function POST(req: Request) {
     return new Response("Conversation not found", { status: 404 })
   }
 
-  const sourceLabel = convo.source_type === "youtube" ? "YouTube video transcript" : "article"
-  const systemPrompt = `You are Kairos, a warm and thoughtful conversational guide. The user has provided the following ${sourceLabel} and wants to explore it with you.
+  // Load user profile for personalization
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("full_name, designation, company, role_at_company")
+    .eq("id", user.id)
+    .single()
+
+  const userName = profile?.full_name ?? "there"
+  const userContext = profile?.designation || profile?.company
+    ? `The user${profile.full_name ? ` (${profile.full_name})` : ""} is a ${profile.designation || "professional"}${profile.company ? ` at ${profile.company}` : ""}${profile.role_at_company ? `, ${profile.role_at_company}` : ""}.`
+    : ""
+
+  const sourceLabel = convo.source_type === "youtube" ? "YouTube video transcript" : "article(s)"
+  const systemPrompt = `You are Kairos, a warm and thoughtful conversational guide. The user's name is ${userName}. ${userContext}
+
+They have provided the following ${sourceLabel} and want to explore the ideas with you.
 
 Source title: ${convo.source_title ?? convo.title}
 Source URL: ${convo.source_url}
