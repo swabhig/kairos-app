@@ -64,7 +64,7 @@ Guidelines:
 - Use markdown for structure (short headings, bullet lists, bold for emphasis) when it aids readability.`
 
   const result = streamText({
-    model: "openai/gpt-4-turbo",
+    model: "google/gemini-2.0-flash",
     system: systemPrompt,
     messages: await convertToModelMessages(messages),
   })

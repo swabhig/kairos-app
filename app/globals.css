@@ -105,26 +105,43 @@
   -webkit-mask-image: radial-gradient(ellipse 80% 70% at 50% 30%, black 20%, transparent 100%);
 }
 
-/* Word carousel animation */
-@keyframes slide-up {
+/* Typewriter animation for word carousel */
+@keyframes typewriter {
   0% {
-    opacity: 0;
-    transform: translateY(100%);
-  }
-  10% {
+    width: 0;
     opacity: 1;
-    transform: translateY(0);
   }
-  90% {
+  5% {
+    width: 0;
+  }
+  50% {
+    width: 100%;
+  }
+  95% {
+    width: 100%;
     opacity: 1;
-    transform: translateY(0);
   }
   100% {
+    width: 100%;
     opacity: 0;
-    transform: translateY(-100%);
   }
 }
 
-.animate-slide-up {
-  animation: slide-up 2s ease-in-out;
+@keyframes blink-caret {
+  0%, 100% {
+    border-right-color: transparent;
+  }
+  50% {
+    border-right-color: var(--primary);
+  }
+}
+
+.typewriter {
+  overflow: hidden;
+  white-space: nowrap;
+  border-right: 3px solid var(--primary);
+  width: 0;
+  animation: 
+    typewriter 2s steps(12, end) forwards,
+    blink-caret 0.5s step-end infinite;
 }

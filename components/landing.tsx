@@ -73,12 +73,14 @@ export function Landing() {
             MVP — limited access
           </span>
 
-          <h1 className="flex flex-col items-center gap-1 text-balance tracking-tight text-foreground md:gap-2">
-            <span className="text-4xl font-light tracking-tight md:text-5xl">Chat with any</span>
-            <span className="relative h-14 overflow-hidden md:h-16">
+          <h1 className="flex flex-col items-center gap-2 text-balance tracking-tight text-foreground md:gap-3">
+            <span className="text-5xl font-bold tracking-tight md:text-7xl">
+              Chat with any
+            </span>
+            <span className="relative h-16 w-full overflow-hidden md:h-20">
               <span
                 key={wordIndex}
-                className="animate-slide-up block font-[family-name:var(--font-cursive)] text-4xl text-primary md:text-6xl"
+                className="typewriter absolute inset-x-0 flex justify-center font-[family-name:var(--font-cursive)] text-5xl text-primary md:text-7xl"
               >
                 {WORDS[wordIndex]}
               </span>
@@ -123,7 +125,7 @@ export function Landing() {
           <ArrowRight className="h-3.5 w-3.5" />
           <span className="flex items-center gap-1.5">
             <MessageSquare className="h-3.5 w-3.5 text-primary" />
-            Start chatting
+            Start talking
           </span>
         </div>
       </section>
