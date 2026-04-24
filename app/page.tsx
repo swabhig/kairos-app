@@ -9,21 +9,29 @@ export default async function HomePage() {
     data: { user },
   } = await supabase.auth.getUser()
 
+  console.log("[v0] Page load - user:", user?.id, user?.email)
+
   if (!user) {
+    console.log("[v0] No user found, showing Landing")
     return <Landing />
   }
 
   // Check if user has completed onboarding
-  const { data: profile } = await supabase
+  const { data: profile, error: profileError } = await supabase
     .from("profiles")
     .select("*")
     .eq("id", user.id)
     .single()
 
+  console.log("[v0] Profile fetch - error:", profileError, "data:", profile)
+
   // Show onboarding if not completed
   if (!profile?.onboarding_completed) {
+    console.log("[v0] Onboarding not completed, showing OnboardingWrapper")
     return <OnboardingWrapper />
   }
+
+  console.log("[v0] Onboarding complete, loading KairosApp")
 
   // Load user's saved conversations (RLS keeps this scoped automatically)
   const { data: conversations } = await supabase
