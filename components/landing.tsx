@@ -1,52 +1,30 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { createClient } from "@/lib/supabase/client"
 import { Button } from "@/components/ui/button"
 import { Sparkles, Link2, Youtube, MessageSquare, ArrowRight, ChevronDown } from "lucide-react"
 import { GoogleIcon } from "@/components/google-icon"
-import { Footer } from "@/components/footer"
-
-const WORDS = ["newsletters", "podcasts", "articles", "blogs"]
 
 export function Landing() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [wordIndex, setWordIndex] = useState(0)
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setWordIndex((prev) => (prev + 1) % WORDS.length)
-    }, 2000)
-    return () => clearInterval(interval)
-  }, [])
 
   async function handleGoogleSignIn() {
     setLoading(true)
     setError(null)
     try {
       const supabase = createClient()
-      const redirectUrl = process.env.NEXT_PUBLIC_DEV_SUPABASE_REDIRECT_URL ?? `${window.location.origin}/auth/callback`
-      console.log("[v0] Signing in with OAuth. Redirect URL:", redirectUrl)
-      
       const { error } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
-          redirectTo: redirectUrl,
+          redirectTo:
+            process.env.NEXT_PUBLIC_DEV_SUPABASE_REDIRECT_URL ?? `${window.location.origin}/auth/callback`,
         },
       })
-      
-      if (error) {
-        console.error("[v0] OAuth sign-in error:", error)
-        setError(error.message || "Could not sign in with Google.")
-        setLoading(false)
-      } else {
-        console.log("[v0] OAuth sign-in initiated, waiting for redirect...")
-        // Don't setLoading(false) here - we're redirecting
-      }
+      if (error) throw error
     } catch (e) {
-      console.error("[v0] Sign-in exception:", e)
-      setError(e instanceof Error ? e.message : "An unexpected error occurred.")
+      setError(e instanceof Error ? e.message : "Could not sign in with Google.")
       setLoading(false)
     }
   }
@@ -64,7 +42,7 @@ export function Landing() {
           <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-primary to-primary/70 text-primary-foreground shadow-lg shadow-primary/20">
             <Sparkles className="h-4 w-4" aria-hidden="true" />
           </div>
-          <span className="font-mono text-sm font-medium tracking-wide text-foreground">VERBE</span>
+          <span className="font-mono text-sm font-medium tracking-wide text-foreground">KAIROS</span>
         </div>
         <Button variant="ghost" size="sm" onClick={handleGoogleSignIn} disabled={loading}>
           Sign in
@@ -81,20 +59,17 @@ export function Landing() {
         <div className="relative z-10 mx-auto flex w-full max-w-3xl flex-col items-center text-center">
           <span className="mb-5 inline-flex items-center gap-2 rounded-full border border-border bg-card px-3 py-1 text-xs text-muted-foreground">
             <span className="h-1.5 w-1.5 rounded-full bg-primary" aria-hidden="true" />
-            MVP — limited access
+            MVP — Blogs & YouTube
           </span>
 
-          <h1 className="flex flex-col items-center gap-3 text-balance tracking-tight text-foreground md:gap-4">
-            <span className="bg-gradient-to-b from-foreground to-foreground/70 bg-clip-text text-5xl font-extrabold tracking-tight text-transparent md:text-7xl">
-              Chat with any
-            </span>
-            <span className="relative flex h-20 items-center justify-center md:h-28">
+          <h1 className="flex flex-col items-center gap-2 text-balance tracking-tight text-foreground md:gap-3">
+            <span className="text-5xl font-semibold leading-[0.95] md:text-7xl">Chat with</span>
+            <span className="relative inline-block font-[family-name:var(--font-cursive)] text-4xl font-normal leading-[1.1] text-primary md:text-6xl">
+              <span className="relative z-10 px-2">timeless wisdom</span>
               <span
-                key={wordIndex}
-                className="typewriter inline-block font-[family-name:var(--font-cursive)] text-6xl text-primary md:text-8xl"
-              >
-                {WORDS[wordIndex]}
-              </span>
+                aria-hidden="true"
+                className="absolute inset-x-0 bottom-1 -z-0 h-3 bg-primary/30 md:bottom-2 md:h-5"
+              />
             </span>
           </h1>
 
@@ -136,12 +111,23 @@ export function Landing() {
           <ArrowRight className="h-3.5 w-3.5" />
           <span className="flex items-center gap-1.5">
             <MessageSquare className="h-3.5 w-3.5 text-primary" />
-            Start talking
+            Start chatting
           </span>
         </div>
       </section>
 
-      <Footer />
+      <footer className="shrink-0 border-t border-border px-6 py-4 text-center text-xs text-muted-foreground md:px-10">
+        An effort to give back to the CS community. For feedback, connect on{" "}
+        <a
+          href="https://wa.me/919810040184"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-foreground underline underline-offset-4 hover:text-primary"
+        >
+          WhatsApp
+        </a>
+        .
+      </footer>
     </main>
   )
 }

@@ -109,7 +109,7 @@ export function KairosApp({
   }
 
   return (
-    <div className="flex h-screen overflow-hidden bg-background">
+    <div className="flex min-h-screen bg-background">
       <ConversationSidebar
         user={user}
         conversations={conversations}
@@ -129,7 +129,7 @@ export function KairosApp({
         {active ? (
           <ChatView key={active.id} conversation={active} user={user} />
         ) : (
-          <SourceInput onCreated={handleCreated} userName={user.name} />
+          <SourceInput onCreated={handleCreated} />
         )}
       </main>
     </div>

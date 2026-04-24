@@ -1,4 +1,5 @@
 import { convertToModelMessages, streamText, type UIMessage } from "ai"
+import { groq } from "@ai-sdk/groq"
 import { createClient } from "@/lib/supabase/server"
 
 export const maxDuration = 60
@@ -33,22 +34,8 @@ export async function POST(req: Request) {
     return new Response("Conversation not found", { status: 404 })
   }
 
-  // Load user profile for personalization
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("full_name, company, role_at_company")
-    .eq("id", user.id)
-    .single()
-
-  const userName = profile?.full_name ?? "there"
-  const userContext = profile?.company
-    ? `The user${profile.full_name ? ` (${profile.full_name})` : ""} is ${profile.role_at_company || "a professional"}${profile.company ? ` at ${profile.company}` : ""}.`
-    : ""
-
-  const sourceLabel = convo.source_type === "youtube" ? "YouTube video transcript" : "article(s)"
-  const systemPrompt = `You are Verbe, a warm and thoughtful conversational guide. The user's name is ${userName}. ${userContext}
-
-They have provided the following ${sourceLabel} and want to explore the ideas with you.
+  const sourceLabel = convo.source_type === "youtube" ? "YouTube video transcript" : "article"
+  const systemPrompt = `You are Kairos, a warm and thoughtful conversational guide. The user has provided the following ${sourceLabel} and wants to explore it with you.
 
 Source title: ${convo.source_title ?? convo.title}
 Source URL: ${convo.source_url}
@@ -64,7 +51,7 @@ Guidelines:
 - Use markdown for structure (short headings, bullet lists, bold for emphasis) when it aids readability.`
 
   const result = streamText({
-    model: "google/gemini-2.0-flash",
+    model: groq("llama-3.3-70b-versatile"),
     system: systemPrompt,
     messages: await convertToModelMessages(messages),
   })
