@@ -26,16 +26,27 @@ export function Landing() {
     setError(null)
     try {
       const supabase = createClient()
+      const redirectUrl = process.env.NEXT_PUBLIC_DEV_SUPABASE_REDIRECT_URL ?? `${window.location.origin}/auth/callback`
+      console.log("[v0] Signing in with OAuth. Redirect URL:", redirectUrl)
+      
       const { error } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
-          redirectTo:
-            process.env.NEXT_PUBLIC_DEV_SUPABASE_REDIRECT_URL ?? `${window.location.origin}/auth/callback`,
+          redirectTo: redirectUrl,
         },
       })
-      if (error) throw error
+      
+      if (error) {
+        console.error("[v0] OAuth sign-in error:", error)
+        setError(error.message || "Could not sign in with Google.")
+        setLoading(false)
+      } else {
+        console.log("[v0] OAuth sign-in initiated, waiting for redirect...")
+        // Don't setLoading(false) here - we're redirecting
+      }
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Could not sign in with Google.")
+      console.error("[v0] Sign-in exception:", e)
+      setError(e instanceof Error ? e.message : "An unexpected error occurred.")
       setLoading(false)
     }
   }
