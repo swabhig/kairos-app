@@ -9,10 +9,15 @@ export async function GET(request: NextRequest) {
   if (code) {
     const supabase = await createClient()
     const { error } = await supabase.auth.exchangeCodeForSession(code)
+    
     if (!error) {
-      return NextResponse.redirect(`${origin}${next}`)
+      // Session has been set in cookies by exchangeCodeForSession
+      // Create response and redirect
+      const response = NextResponse.redirect(`${origin}${next}`)
+      return response
     }
   }
 
+  // If we get here, either no code was provided or exchange failed
   return NextResponse.redirect(`${origin}/auth/error`)
 }
