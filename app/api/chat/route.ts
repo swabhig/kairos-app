@@ -50,7 +50,7 @@ Guidelines:
 - Use markdown for structure (short headings, bullet lists, bold for emphasis) when it aids readability.`
 
   const result = streamText({
-    model: "anthropic/claude-3-5-sonnet-20241022",
+    model: "openai/gpt-4o-mini",
     system: systemPrompt,
     messages: await convertToModelMessages(messages),
   })
