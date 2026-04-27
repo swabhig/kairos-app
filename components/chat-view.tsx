@@ -26,8 +26,11 @@ export function ChatView({ conversation, user }: { conversation: ActiveConversat
   })
 
   useEffect(() => {
-    scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" })
-  }, [messages])
+    const el = scrollRef.current
+    if (!el) return
+    // Auto-scroll to bottom as new tokens stream in
+    el.scrollTo({ top: el.scrollHeight, behavior: "smooth" })
+  }, [messages, status])
 
   const busy = status === "submitted" || status === "streaming"
 
@@ -51,9 +54,9 @@ export function ChatView({ conversation, user }: { conversation: ActiveConversat
       : []
 
   return (
-    <div className="flex h-[calc(100vh)] flex-1 flex-col md:h-screen">
-      {/* Source header */}
-      <div className="border-b border-border bg-card/40 px-4 py-3 md:px-6">
+    <div className="flex min-h-0 flex-1 flex-col">
+      {/* Source header — fixed, never scrolls */}
+      <div className="shrink-0 border-b border-border bg-card/40 px-4 py-3 md:px-6">
         <div className="mx-auto flex max-w-3xl items-start gap-3">
           <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-primary/15 text-primary">
             <SourceIcon className="h-3.5 w-3.5" aria-hidden="true" />
@@ -116,8 +119,8 @@ export function ChatView({ conversation, user }: { conversation: ActiveConversat
         </div>
       </div>
 
-      {/* Composer */}
-      <div className="border-t border-border bg-card/40 px-4 py-4 md:px-6">
+      {/* Composer — fixed, never scrolls */}
+      <div className="shrink-0 border-t border-border bg-card/40 px-4 py-4 md:px-6">
         <form onSubmit={handleSubmit} className="mx-auto flex max-w-3xl items-end gap-2">
           <textarea
             value={input}

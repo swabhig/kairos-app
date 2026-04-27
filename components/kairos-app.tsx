@@ -109,7 +109,7 @@ export function KairosApp({
   }
 
   return (
-    <div className="flex min-h-screen bg-background">
+    <div className="flex h-screen overflow-hidden bg-background">
       <ConversationSidebar
         user={user}
         conversations={conversations}
@@ -120,8 +120,8 @@ export function KairosApp({
         onDelete={handleDelete}
       />
 
-      <main className="flex flex-1 flex-col">
-        <header className="flex items-center justify-between border-b border-border px-4 py-3 md:px-6 md:hidden">
+      <main className="flex min-h-0 flex-1 flex-col">
+        <header className="flex shrink-0 items-center justify-between border-b border-border px-4 py-3 md:px-6 md:hidden">
           <span className="font-mono text-xs tracking-wide text-muted-foreground">VERBE</span>
           <UserMenu user={user} compact />
         </header>
