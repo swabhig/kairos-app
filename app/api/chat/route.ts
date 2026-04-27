@@ -1,8 +1,5 @@
 import { convertToModelMessages, streamText, type UIMessage } from "ai"
-import { createGroq } from "@ai-sdk/groq"
 import { createClient } from "@/lib/supabase/server"
-
-const groq = createGroq({ apiKey: process.env.GROQ_API_KEY })
 
 export const maxDuration = 60
 
@@ -53,7 +50,7 @@ Guidelines:
 - Use markdown for structure (short headings, bullet lists, bold for emphasis) when it aids readability.`
 
   const result = streamText({
-    model: groq("llama-3.3-70b-versatile"),
+    model: "anthropic/claude-3-5-sonnet-20241022",
     system: systemPrompt,
     messages: await convertToModelMessages(messages),
   })
