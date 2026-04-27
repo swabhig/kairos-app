@@ -50,7 +50,7 @@ Guidelines:
 - Use markdown for structure (short headings, bullet lists, bold for emphasis) when it aids readability.`
 
   const result = streamText({
-    model: "google/gemini-2.0-flash",
+    model: "anthropic/claude-3-5-sonnet-20241022",
     system: systemPrompt,
     messages: await convertToModelMessages(messages),
   })
