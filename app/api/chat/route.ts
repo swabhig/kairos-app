@@ -1,5 +1,4 @@
 import { convertToModelMessages, streamText, type UIMessage } from "ai"
-import { groq } from "@ai-sdk/groq"
 import { createClient } from "@/lib/supabase/server"
 
 export const maxDuration = 60
@@ -35,7 +34,7 @@ export async function POST(req: Request) {
   }
 
   const sourceLabel = convo.source_type === "youtube" ? "YouTube video transcript" : "article"
-  const systemPrompt = `You are Kairos, a warm and thoughtful conversational guide. The user has provided the following ${sourceLabel} and wants to explore it with you.
+  const systemPrompt = `You are Verbe, a warm and thoughtful conversational guide. The user has provided the following ${sourceLabel} and wants to explore it with you.
 
 Source title: ${convo.source_title ?? convo.title}
 Source URL: ${convo.source_url}
@@ -51,7 +50,7 @@ Guidelines:
 - Use markdown for structure (short headings, bullet lists, bold for emphasis) when it aids readability.`
 
   const result = streamText({
-    model: groq("llama-3.3-70b-versatile"),
+    model: "google/gemini-2.0-flash",
     system: systemPrompt,
     messages: await convertToModelMessages(messages),
   })

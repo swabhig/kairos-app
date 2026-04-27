@@ -104,7 +104,7 @@ export function ChatView({ conversation, user }: { conversation: ActiveConversat
           {busy && messages[messages.length - 1]?.role === "user" ? (
             <div className="flex items-center gap-2 text-xs text-muted-foreground">
               <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden="true" />
-              Kairos is thinking...
+              Verbe is thinking...
             </div>
           ) : null}
 
@@ -128,7 +128,7 @@ export function ChatView({ conversation, user }: { conversation: ActiveConversat
                 handleSubmit(e as unknown as React.FormEvent)
               }
             }}
-            placeholder="Ask Kairos about this source..."
+            placeholder="Ask Verbe about this source..."
             rows={1}
             disabled={busy}
             aria-label="Message"
@@ -174,7 +174,7 @@ function MessageBubble({
             (user.name || user.email || "?").slice(0, 1).toUpperCase()
           )
         ) : (
-          "K"
+          "V"
         )}
       </div>
       <div

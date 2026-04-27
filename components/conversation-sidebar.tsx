@@ -38,7 +38,7 @@ export function ConversationSidebar({
         <div className="flex h-7 w-7 items-center justify-center rounded-md bg-primary text-primary-foreground">
           <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
         </div>
-        <span className="font-mono text-sm tracking-wide text-sidebar-foreground">KAIROS</span>
+        <span className="font-mono text-sm tracking-wide text-sidebar-foreground">VERBE</span>
       </div>
 
       <div className="px-3">

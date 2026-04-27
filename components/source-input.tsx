@@ -59,7 +59,7 @@ export function SourceInput({ onCreated }: { onCreated: (c: CreatedConversation)
           What do you want to understand today?
         </h1>
         <p className="mt-3 max-w-lg text-pretty text-sm leading-relaxed text-muted-foreground md:text-base">
-          Paste a blog post URL or a YouTube link. Kairos will parse it and open a conversation grounded in the
+          Paste a blog post URL or a YouTube link. Verbe will parse it and open a conversation grounded in the
           source.
         </p>
 
