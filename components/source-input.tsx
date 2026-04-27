@@ -26,7 +26,7 @@ type CrawlProgress = {
   currentTitle?: string
 }
 
-export function SourceInput({ onCreated }: { onCreated: (c: CreatedConversation) => void }) {
+export function SourceInput({ onCreated, userName }: { onCreated: (c: CreatedConversation) => void; userName?: string | null }) {
   const [url, setUrl] = useState("")
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -140,7 +140,7 @@ export function SourceInput({ onCreated }: { onCreated: (c: CreatedConversation)
         </div>
 
         <h1 className="text-balance text-3xl font-semibold tracking-tight text-foreground md:text-4xl">
-          What do you want to understand today?
+          {userName ? `${userName}, what do you want to explore today?` : "What do you want to explore today?"}
         </h1>
         <p className="mt-3 max-w-lg text-pretty text-sm leading-relaxed text-muted-foreground md:text-base">
           Paste a blog post, newsletter archive, or YouTube link. Verbe will parse all articles and open a conversation.

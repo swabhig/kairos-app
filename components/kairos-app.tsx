@@ -129,7 +129,7 @@ export function KairosApp({
         {active ? (
           <ChatView key={active.id} conversation={active} user={user} />
         ) : (
-          <SourceInput onCreated={handleCreated} />
+          <SourceInput onCreated={handleCreated} userName={user.name} />
         )}
       </main>
     </div>
