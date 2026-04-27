@@ -131,7 +131,7 @@ export function ChatView({ conversation, user }: { conversation: ActiveConversat
                 handleSubmit(e as unknown as React.FormEvent)
               }
             }}
-            placeholder="Ask Verbe about this source..."
+            placeholder={`Ask ${conversation.source_title?.split(" ")[0] || "author"} > your question...`}
             rows={1}
             disabled={busy}
             aria-label="Message"
