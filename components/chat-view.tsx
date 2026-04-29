@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useRef, useState, useMemo } from "react"
 import { useChat } from "@ai-sdk/react"
 import { DefaultChatTransport } from "ai"
 import { Button } from "@/components/ui/button"
@@ -10,9 +10,42 @@ import { Link2, Youtube, ExternalLink, Send, Loader2 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import type { ActiveConversation, KairosUser } from "@/components/kairos-app"
 
+function extractAuthorName(conversation: ActiveConversation): string {
+  // If we have an explicit author name, use first name only
+  if (conversation.author_name) {
+    return conversation.author_name.split(" ")[0]
+  }
+  
+  // Try to extract from title (common patterns: "Name - Title", "Title | Name", "Title by Name")
+  const title = conversation.source_title || conversation.title || ""
+  
+  // Pattern: "by Name" at the end
+  const byMatch = title.match(/\bby\s+([A-Z][a-z]+)/i)
+  if (byMatch) return byMatch[1]
+  
+  // Pattern: "Name's Newsletter" or "Name's Podcast"
+  const possessiveMatch = title.match(/^([A-Z][a-z]+)'s\s/i)
+  if (possessiveMatch) return possessiveMatch[1]
+  
+  // Pattern: "The Name Show" or similar
+  const showMatch = title.match(/^The\s+([A-Z][a-z]+)\s+(Show|Podcast|Newsletter)/i)
+  if (showMatch) return showMatch[1]
+  
+  // Fallback: first word if it looks like a name (capitalized, not common words)
+  const commonWords = ["the", "a", "an", "how", "what", "why", "when", "where", "top", "best", "new", "your", "my"]
+  const firstWord = title.split(/[\s\-|:]+/)[0]
+  if (firstWord && /^[A-Z][a-z]+$/.test(firstWord) && !commonWords.includes(firstWord.toLowerCase())) {
+    return firstWord
+  }
+  
+  return "Author"
+}
+
 export function ChatView({ conversation, user }: { conversation: ActiveConversation; user: KairosUser }) {
   const [input, setInput] = useState("")
   const scrollRef = useRef<HTMLDivElement>(null)
+  
+  const authorName = useMemo(() => extractAuthorName(conversation), [conversation])
 
   const { messages, sendMessage, status, error } = useChat({
     id: conversation.id,
@@ -28,7 +61,6 @@ export function ChatView({ conversation, user }: { conversation: ActiveConversat
   useEffect(() => {
     const el = scrollRef.current
     if (!el) return
-    // Auto-scroll to bottom as new tokens stream in
     el.scrollTo({ top: el.scrollHeight, behavior: "smooth" })
   }, [messages, status])
 
@@ -55,7 +87,7 @@ export function ChatView({ conversation, user }: { conversation: ActiveConversat
 
   return (
     <div className="flex min-h-0 flex-1 flex-col">
-      {/* Source header — fixed, never scrolls */}
+      {/* Source header */}
       <div className="shrink-0 border-b border-border bg-card/40 px-4 py-3 md:px-6">
         <div className="mx-auto flex max-w-3xl items-start gap-3">
           <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-primary/15 text-primary">
@@ -82,8 +114,7 @@ export function ChatView({ conversation, user }: { conversation: ActiveConversat
           {messages.length === 0 ? (
             <div className="flex flex-col gap-3 rounded-lg border border-dashed border-border bg-card/40 p-5">
               <p className="text-sm leading-relaxed text-muted-foreground">
-                {user.name ? `Hey ${user.name.split(" ")[0]} 👋 Ask` : "Ask"} anything about this {conversation.source_type === "youtube" ? "video" : "article"}. Every answer
-                will be grounded in the content you provided.
+                {user.name ? `Hey ${user.name.split(" ")[0]}, ask` : "Ask"} {authorName} anything about this {conversation.source_type === "youtube" ? "video" : "article"}.
               </p>
               <div className="flex flex-wrap gap-2">
                 {suggestions.map((s) => (
@@ -101,13 +132,13 @@ export function ChatView({ conversation, user }: { conversation: ActiveConversat
           ) : null}
 
           {messages.map((m) => (
-            <MessageBubble key={m.id} message={m} user={user} />
+            <MessageBubble key={m.id} message={m} user={user} authorName={authorName} />
           ))}
 
           {busy && messages[messages.length - 1]?.role === "user" ? (
             <div className="flex items-center gap-2 text-xs text-muted-foreground">
               <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden="true" />
-              {conversation.author_name || conversation.source_title?.split(/[:\-–|]/)[0].trim() || "Author"} is thinking...
+              {authorName} is thinking...
             </div>
           ) : null}
 
@@ -119,7 +150,7 @@ export function ChatView({ conversation, user }: { conversation: ActiveConversat
         </div>
       </div>
 
-      {/* Composer — fixed, never scrolls */}
+      {/* Composer */}
       <div className="shrink-0 border-t border-border bg-card/40 px-4 py-4 md:px-6">
         <form onSubmit={handleSubmit} className="mx-auto flex max-w-3xl items-end gap-2">
           <textarea
@@ -131,7 +162,7 @@ export function ChatView({ conversation, user }: { conversation: ActiveConversat
                 handleSubmit(e as unknown as React.FormEvent)
               }
             }}
-            placeholder={`Ask ${conversation.author_name || conversation.source_title?.split(/[:\-–|]/)[0].trim() || "author"} > your question...`}
+            placeholder={`Ask ${authorName} > your question...`}
             rows={1}
             disabled={busy}
             aria-label="Message"
@@ -149,9 +180,11 @@ export function ChatView({ conversation, user }: { conversation: ActiveConversat
 function MessageBubble({
   message,
   user,
+  authorName,
 }: {
   message: { id: string; role: string; parts?: Array<{ type: string; text?: string }> }
   user: KairosUser
+  authorName: string
 }) {
   const isUser = message.role === "user"
   const text =
@@ -171,13 +204,12 @@ function MessageBubble({
       >
         {isUser ? (
           user.avatar ? (
-            // eslint-disable-next-line @next/next/no-img-element
             <img src={user.avatar || "/placeholder.svg"} alt="" className="h-full w-full object-cover" />
           ) : (
             (user.name || user.email || "?").slice(0, 1).toUpperCase()
           )
         ) : (
-          "V"
+          authorName.slice(0, 1).toUpperCase()
         )}
       </div>
       <div

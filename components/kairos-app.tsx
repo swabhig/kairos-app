@@ -20,6 +20,7 @@ export type ActiveConversation = {
   source_type: "url" | "youtube"
   source_url: string
   source_title: string | null
+  author_name: string | null
   messages: UIMessage[]
 }
 
@@ -47,6 +48,7 @@ export function KairosApp({
           source_type: "url" | "youtube"
           source_url: string
           source_title: string | null
+          author_name: string | null
           messages: UIMessage[]
         }
       }
@@ -56,6 +58,7 @@ export function KairosApp({
         source_type: conversation.source_type,
         source_url: conversation.source_url,
         source_title: conversation.source_title,
+        author_name: conversation.author_name,
         messages: conversation.messages ?? [],
       })
     } catch (e) {
@@ -87,6 +90,7 @@ export function KairosApp({
     source_type: "url" | "youtube"
     source_url: string
     source_title: string | null
+    author_name: string | null
     created_at: string
   }) {
     const summary: ConversationSummary = {
@@ -104,6 +108,7 @@ export function KairosApp({
       source_type: convo.source_type,
       source_url: convo.source_url,
       source_title: convo.source_title,
+      author_name: convo.author_name,
       messages: [],
     })
   }

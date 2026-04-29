@@ -1,12 +1,11 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import Link from "next/link"
 import { createClient } from "@/lib/supabase/client"
 import { Button } from "@/components/ui/button"
-import { Link2, Youtube, MessageSquare, ArrowRight, ChevronDown } from "lucide-react"
+import { Link2, Youtube, MessageSquare, ArrowRight, ChevronDown, Sparkles } from "lucide-react"
 import { GoogleIcon } from "@/components/google-icon"
-import { SiteHeader } from "@/components/site-header"
-import { SiteFooter } from "@/components/site-footer"
 
 const ROTATING_WORDS = ["podcasts", "articles", "newsletters", "blogs"]
 
@@ -17,7 +16,6 @@ export function Landing() {
   const [displayText, setDisplayText] = useState("")
   const [isTyping, setIsTyping] = useState(true)
 
-  // Typewriter effect
   useEffect(() => {
     const currentWord = ROTATING_WORDS[wordIndex]
     
@@ -25,19 +23,19 @@ export function Landing() {
       if (displayText.length < currentWord.length) {
         const timeout = setTimeout(() => {
           setDisplayText(currentWord.slice(0, displayText.length + 1))
-        }, 60)
+        }, 50)
         return () => clearTimeout(timeout)
       } else {
         const timeout = setTimeout(() => {
           setIsTyping(false)
-        }, 1200)
+        }, 1000)
         return () => clearTimeout(timeout)
       }
     } else {
       if (displayText.length > 0) {
         const timeout = setTimeout(() => {
           setDisplayText(displayText.slice(0, -1))
-        }, 40)
+        }, 30)
         return () => clearTimeout(timeout)
       } else {
         setWordIndex((prev) => (prev + 1) % ROTATING_WORDS.length)
@@ -71,7 +69,31 @@ export function Landing() {
         className="bg-grid-pattern bg-grid-fade pointer-events-none absolute inset-0 -z-10"
       />
       
-      <SiteHeader />
+      {/* Simple Header */}
+      <header className="relative z-50 flex shrink-0 items-center justify-between px-6 py-4 md:px-10">
+        <Link href="/" className="flex items-center gap-2.5">
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-primary to-primary/70 text-primary-foreground shadow-lg shadow-primary/20">
+            <Sparkles className="h-4 w-4" aria-hidden="true" />
+          </div>
+          <span className="font-mono text-sm font-medium tracking-wide text-foreground">VERBE</span>
+        </Link>
+
+        <nav className="flex items-center gap-6">
+          <Link href="/about" className="text-sm text-muted-foreground transition-colors hover:text-foreground">
+            About
+          </Link>
+          <Link href="/pricing" className="text-sm text-muted-foreground transition-colors hover:text-foreground">
+            Pricing
+          </Link>
+          <button 
+            onClick={handleGoogleSignIn} 
+            disabled={loading}
+            className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+          >
+            {loading ? "..." : "Sign in"}
+          </button>
+        </nav>
+      </header>
 
       <section className="relative z-10 flex flex-1 flex-col items-center justify-center px-6">
         <div
@@ -85,16 +107,16 @@ export function Landing() {
             MVP — limited access
           </span>
 
-          <h1 className="flex flex-col items-center gap-3 text-balance tracking-tight text-foreground md:gap-4">
-            <span className="font-[family-name:var(--font-cursive)] text-5xl leading-[1.1] md:text-7xl">
+          <h1 className="flex flex-col items-center gap-2 text-balance tracking-tight text-foreground">
+            <span className="font-[family-name:var(--font-cursive)] text-5xl md:text-7xl">
               Chat with
             </span>
             <span className="flex items-center gap-3">
-              <span className="text-4xl font-light text-muted-foreground md:text-5xl">any</span>
-              <span className="relative h-14 min-w-[200px] md:h-16 md:min-w-[280px]">
+              <span className="font-[family-name:var(--font-cursive)] text-4xl text-muted-foreground md:text-5xl">any</span>
+              <span className="relative h-12 min-w-[180px] md:h-16 md:min-w-[260px]">
                 <span className="font-[family-name:var(--font-cursive)] text-4xl text-primary md:text-6xl">
                   {displayText}
-                  <span className="animate-blink ml-0.5 inline-block h-8 w-0.5 bg-primary md:h-12" />
+                  <span className="animate-blink ml-0.5 inline-block h-8 w-0.5 bg-primary md:h-10" />
                 </span>
               </span>
             </span>
@@ -143,7 +165,18 @@ export function Landing() {
         </div>
       </section>
 
-      <SiteFooter />
+      {/* Simple Footer */}
+      <footer className="shrink-0 px-6 py-4 text-center text-xs text-muted-foreground md:px-10">
+        For feedback, connect on{" "}
+        <a
+          href="https://wa.me/919810040184"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-foreground underline underline-offset-4 hover:text-primary"
+        >
+          WhatsApp
+        </a>
+      </footer>
     </main>
   )
 }
