@@ -23,19 +23,19 @@ export function Landing() {
       if (displayText.length < currentWord.length) {
         const timeout = setTimeout(() => {
           setDisplayText(currentWord.slice(0, displayText.length + 1))
-        }, 50)
+        }, 80) // Slower typing
         return () => clearTimeout(timeout)
       } else {
         const timeout = setTimeout(() => {
           setIsTyping(false)
-        }, 1000)
+        }, 1500) // Longer pause before erasing
         return () => clearTimeout(timeout)
       }
     } else {
       if (displayText.length > 0) {
         const timeout = setTimeout(() => {
           setDisplayText(displayText.slice(0, -1))
-        }, 30)
+        }, 50) // Slower erasing
         return () => clearTimeout(timeout)
       } else {
         setWordIndex((prev) => (prev + 1) % ROTATING_WORDS.length)
@@ -107,17 +107,14 @@ export function Landing() {
             MVP — limited access
           </span>
 
-          <h1 className="flex flex-col items-center gap-2 text-balance tracking-tight text-foreground">
-            <span className="font-[family-name:var(--font-cursive)] text-5xl md:text-7xl">
-              Chat with
+          <h1 className="flex flex-col items-center gap-3 text-balance tracking-tight text-foreground">
+            <span className="text-5xl font-bold md:text-7xl">
+              Chat with any
             </span>
-            <span className="flex items-center gap-3">
-              <span className="font-[family-name:var(--font-cursive)] text-4xl text-muted-foreground md:text-5xl">any</span>
-              <span className="relative h-12 min-w-[180px] md:h-16 md:min-w-[260px]">
-                <span className="font-[family-name:var(--font-cursive)] text-4xl text-primary md:text-6xl">
-                  {displayText}
-                  <span className="animate-blink ml-0.5 inline-block h-8 w-0.5 bg-primary md:h-10" />
-                </span>
+            <span className="relative flex h-16 items-center justify-center md:h-20">
+              <span className="font-[family-name:var(--font-cursive)] text-5xl text-primary md:text-7xl">
+                {displayText}
+                <span className="animate-blink ml-1 inline-block h-10 w-1 bg-primary md:h-14" />
               </span>
             </span>
           </h1>

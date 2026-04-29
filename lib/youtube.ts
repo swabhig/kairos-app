@@ -1,3 +1,5 @@
+import { YoutubeTranscript } from "youtube-transcript"
+
 export type YoutubeResult = {
   title: string
   videoId: string
@@ -24,11 +26,52 @@ export function extractVideoId(url: string): string | null {
   }
 }
 
-async function fetchTranscriptFromInvidious(videoId: string): Promise<string | null> {
+async function fetchWithYoutubeTranscript(videoId: string): Promise<string | null> {
+  try {
+    const transcriptItems = await YoutubeTranscript.fetchTranscript(videoId, {
+      lang: "en",
+    })
+    
+    if (!transcriptItems || transcriptItems.length === 0) {
+      return null
+    }
+    
+    const transcript = transcriptItems
+      .map((item) => item.text)
+      .join(" ")
+      .replace(/\s+/g, " ")
+      .trim()
+    
+    return transcript.length > 50 ? transcript : null
+  } catch {
+    // Try without language preference
+    try {
+      const transcriptItems = await YoutubeTranscript.fetchTranscript(videoId)
+      
+      if (!transcriptItems || transcriptItems.length === 0) {
+        return null
+      }
+      
+      const transcript = transcriptItems
+        .map((item) => item.text)
+        .join(" ")
+        .replace(/\s+/g, " ")
+        .trim()
+      
+      return transcript.length > 50 ? transcript : null
+    } catch {
+      return null
+    }
+  }
+}
+
+async function fetchFromInvidious(videoId: string): Promise<string | null> {
   const instances = [
     "https://vid.puffyan.us",
-    "https://invidious.nerdvpn.de",
+    "https://invidious.nerdvpn.de", 
     "https://inv.riverside.rocks",
+    "https://invidious.lunar.icu",
+    "https://yt.artemislena.eu",
   ]
   
   for (const instance of instances) {
@@ -41,7 +84,6 @@ async function fetchTranscriptFromInvidious(videoId: string): Promise<string | n
       const captions = await res.json()
       if (!Array.isArray(captions) || captions.length === 0) continue
       
-      // Find English captions
       const englishCaption = captions.find(
         (c: { language_code?: string }) => 
           c.language_code === "en" || c.language_code?.startsWith("en")
@@ -55,12 +97,19 @@ async function fetchTranscriptFromInvidious(videoId: string): Promise<string | n
       if (!captionRes.ok) continue
       
       const xml = await captionRes.text()
-      // Extract text from XML
       const textMatches = xml.match(/<text[^>]*>([^<]*)<\/text>/g)
       if (!textMatches) continue
       
       const transcript = textMatches
-        .map(t => t.replace(/<[^>]+>/g, "").replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&#39;/g, "'").replace(/&quot;/g, '"'))
+        .map(t => 
+          t.replace(/<[^>]+>/g, "")
+           .replace(/&amp;/g, "&")
+           .replace(/&lt;/g, "<")
+           .replace(/&gt;/g, ">")
+           .replace(/&#39;/g, "'")
+           .replace(/&quot;/g, '"')
+           .replace(/\\n/g, " ")
+        )
         .join(" ")
         .replace(/\s+/g, " ")
         .trim()
@@ -73,27 +122,28 @@ async function fetchTranscriptFromInvidious(videoId: string): Promise<string | n
   return null
 }
 
-async function fetchTranscriptDirect(videoId: string): Promise<string | null> {
+async function fetchFromNoCors(videoId: string): Promise<string | null> {
   try {
-    // Try to get transcript from YouTube's timedtext API
-    const url = `https://www.youtube.com/watch?v=${videoId}`
-    const res = await fetch(url, {
-      headers: {
-        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36",
-        "Accept-Language": "en-US,en;q=0.9",
-      },
-      signal: AbortSignal.timeout(10000),
+    // Try fetching via a CORS proxy service
+    const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(
+      `https://www.youtube.com/watch?v=${videoId}`
+    )}`
+    
+    const res = await fetch(proxyUrl, {
+      signal: AbortSignal.timeout(15000),
     })
     
     if (!res.ok) return null
     
     const html = await res.text()
     
-    // Try to extract captions URL from the page
-    const captionsMatch = html.match(/"captionTracks":\s*(\[.*?\])/s)
-    if (!captionsMatch) return null
+    // Extract caption tracks from ytInitialPlayerResponse
+    const playerMatch = html.match(/ytInitialPlayerResponse\s*=\s*({.+?});/)
+    if (!playerMatch) return null
     
-    const captionTracks = JSON.parse(captionsMatch[1])
+    const playerData = JSON.parse(playerMatch[1])
+    const captionTracks = playerData?.captions?.playerCaptionsTracklistRenderer?.captionTracks
+    
     if (!Array.isArray(captionTracks) || captionTracks.length === 0) return null
     
     // Find English or first available
@@ -103,9 +153,12 @@ async function fetchTranscriptDirect(videoId: string): Promise<string | null> {
     
     if (!track?.baseUrl) return null
     
-    const captionRes = await fetch(track.baseUrl, {
-      signal: AbortSignal.timeout(8000),
+    // Fetch the caption XML via proxy
+    const captionProxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(track.baseUrl)}`
+    const captionRes = await fetch(captionProxyUrl, {
+      signal: AbortSignal.timeout(10000),
     })
+    
     if (!captionRes.ok) return null
     
     const xml = await captionRes.text()
@@ -113,7 +166,13 @@ async function fetchTranscriptDirect(videoId: string): Promise<string | null> {
     if (!textMatches) return null
     
     const transcript = textMatches
-      .map(t => t.replace(/<[^>]+>/g, "").replace(/&amp;/g, "&").replace(/&#39;/g, "'"))
+      .map(t => 
+        t.replace(/<[^>]+>/g, "")
+         .replace(/&amp;/g, "&")
+         .replace(/&#39;/g, "'")
+         .replace(/&quot;/g, '"')
+         .replace(/\\n/g, " ")
+      )
       .join(" ")
       .replace(/\s+/g, " ")
       .trim()
@@ -130,31 +189,44 @@ export async function fetchYoutubeTranscript(url: string): Promise<YoutubeResult
     throw new Error("That doesn't look like a valid YouTube URL.")
   }
 
-  // Try multiple methods
-  let transcript = await fetchTranscriptDirect(videoId)
+  // Try multiple methods in order of reliability
+  let transcript: string | null = null
   
+  // Method 1: youtube-transcript library
+  transcript = await fetchWithYoutubeTranscript(videoId)
+  
+  // Method 2: Invidious instances
   if (!transcript) {
-    transcript = await fetchTranscriptFromInvidious(videoId)
+    transcript = await fetchFromInvidious(videoId)
+  }
+  
+  // Method 3: CORS proxy approach
+  if (!transcript) {
+    transcript = await fetchFromNoCors(videoId)
   }
   
   if (!transcript || transcript.length < 50) {
-    throw new Error("Could not fetch a transcript for this video. It may not have captions enabled, or captions may be auto-generated and restricted.")
+    throw new Error(
+      "Could not fetch a transcript for this video. This video may not have captions available, " +
+      "or the captions may be restricted. Try a video with manually added captions."
+    )
   }
 
-  // Best-effort title and author fetch from oEmbed
+  // Fetch title and author from oEmbed
   let title = `YouTube video ${videoId}`
   let author: string | undefined
   try {
-    const r = await fetch(`https://www.youtube.com/oembed?url=${encodeURIComponent(url)}&format=json`, {
-      signal: AbortSignal.timeout(8000),
-    })
+    const r = await fetch(
+      `https://www.youtube.com/oembed?url=${encodeURIComponent(url)}&format=json`,
+      { signal: AbortSignal.timeout(8000) }
+    )
     if (r.ok) {
       const data = await r.json() as { title?: string; author_name?: string }
       if (data.title) title = data.title
       if (data.author_name) author = data.author_name
     }
   } catch {
-    // ignore — title fallback is fine
+    // ignore - title fallback is fine
   }
 
   // Cap length for model context
