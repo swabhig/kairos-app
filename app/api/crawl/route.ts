@@ -121,9 +121,10 @@ export async function POST(req: Request) {
               source_url: url,
               source_title: mainTitle,
               source_content: combinedContent,
+              author_name: crawlResult.authorName || null,
               messages: [],
             })
-            .select("id, title, source_type, source_url, source_title, created_at")
+            .select("id, title, source_type, source_url, source_title, author_name, created_at")
             .single()
 
           if (error) {
@@ -155,9 +156,10 @@ export async function POST(req: Request) {
           source_url: url,
           source_title: page.title,
           source_content: page.content,
+          author_name: page.author || null,
           messages: [],
         })
-        .select("id, title, source_type, source_url, source_title, created_at")
+        .select("id, title, source_type, source_url, source_title, author_name, created_at")
         .single()
 
       if (error) {

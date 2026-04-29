@@ -4,6 +4,7 @@ export type ScrapeResult = {
   title: string
   content: string
   siteName?: string
+  author?: string
 }
 
 /**
@@ -52,6 +53,13 @@ export async function scrapeUrl(url: string): Promise<ScrapeResult> {
     "Untitled"
 
   const siteName = $('meta[property="og:site_name"]').attr("content")?.trim()
+  
+  // Extract author
+  const author = 
+    $('meta[name="author"]').attr("content")?.trim() ||
+    $('meta[property="article:author"]').attr("content")?.trim() ||
+    $(".author-name, .byline-name, [rel='author'], .post-author").first().text().trim() ||
+    siteName?.replace(/ on Substack$/i, "").trim()
 
   // Remove non-content elements
   $("script, style, noscript, iframe, nav, footer, header, aside, form, button").remove()
@@ -81,5 +89,5 @@ export async function scrapeUrl(url: string): Promise<ScrapeResult> {
   // Cap to roughly 25k chars so we don't blow the model context
   const capped = cleaned.slice(0, 25_000)
 
-  return { title, content: capped, siteName }
+  return { title, content: capped, siteName, author }
 }

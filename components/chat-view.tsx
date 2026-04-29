@@ -107,7 +107,7 @@ export function ChatView({ conversation, user }: { conversation: ActiveConversat
           {busy && messages[messages.length - 1]?.role === "user" ? (
             <div className="flex items-center gap-2 text-xs text-muted-foreground">
               <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden="true" />
-              Verbe is thinking...
+              {conversation.author_name || conversation.source_title?.split(/[:\-–|]/)[0].trim() || "Author"} is thinking...
             </div>
           ) : null}
 
@@ -131,7 +131,7 @@ export function ChatView({ conversation, user }: { conversation: ActiveConversat
                 handleSubmit(e as unknown as React.FormEvent)
               }
             }}
-            placeholder={`Ask ${conversation.source_title?.split(" ")[0] || "author"} > your question...`}
+            placeholder={`Ask ${conversation.author_name || conversation.source_title?.split(/[:\-–|]/)[0].trim() || "author"} > your question...`}
             rows={1}
             disabled={busy}
             aria-label="Message"

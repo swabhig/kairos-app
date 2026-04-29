@@ -8,7 +8,7 @@ import { GoogleIcon } from "@/components/google-icon"
 import { SiteHeader } from "@/components/site-header"
 import { SiteFooter } from "@/components/site-footer"
 
-const ROTATING_WORDS = ["podcast", "article", "newsletter", "blog"]
+const ROTATING_WORDS = ["podcasts", "articles", "newsletters", "blogs"]
 
 export function Landing() {
   const [loading, setLoading] = useState(false)
@@ -22,28 +22,24 @@ export function Landing() {
     const currentWord = ROTATING_WORDS[wordIndex]
     
     if (isTyping) {
-      // Typing forward
       if (displayText.length < currentWord.length) {
         const timeout = setTimeout(() => {
           setDisplayText(currentWord.slice(0, displayText.length + 1))
-        }, 80) // Fast typing
+        }, 60)
         return () => clearTimeout(timeout)
       } else {
-        // Pause at end, then start erasing
         const timeout = setTimeout(() => {
           setIsTyping(false)
-        }, 1500)
+        }, 1200)
         return () => clearTimeout(timeout)
       }
     } else {
-      // Erasing backward
       if (displayText.length > 0) {
         const timeout = setTimeout(() => {
           setDisplayText(displayText.slice(0, -1))
-        }, 50) // Fast erasing
+        }, 40)
         return () => clearTimeout(timeout)
       } else {
-        // Move to next word
         setWordIndex((prev) => (prev + 1) % ROTATING_WORDS.length)
         setIsTyping(true)
       }
@@ -70,7 +66,6 @@ export function Landing() {
 
   return (
     <main className="relative flex h-screen flex-col overflow-hidden bg-background">
-      {/* Premium grid background */}
       <div 
         aria-hidden="true" 
         className="bg-grid-pattern bg-grid-fade pointer-events-none absolute inset-0 -z-10"
@@ -79,7 +74,6 @@ export function Landing() {
       <SiteHeader />
 
       <section className="relative z-10 flex flex-1 flex-col items-center justify-center px-6">
-        {/* Ambient glow */}
         <div
           aria-hidden="true"
           className="pointer-events-none absolute left-1/2 top-1/3 -z-0 h-[32rem] w-[32rem] -translate-x-1/2 -translate-y-1/2 rounded-full bg-gradient-to-br from-primary/20 via-primary/10 to-transparent blur-3xl"
@@ -91,17 +85,22 @@ export function Landing() {
             MVP — limited access
           </span>
 
-          <h1 className="flex flex-col items-center gap-2 text-balance tracking-tight text-foreground md:gap-3">
-            <span className="text-5xl font-semibold leading-[0.95] md:text-7xl">Chat with any</span>
-            <span className="relative h-16 md:h-20">
-              <span className="font-[family-name:var(--font-cursive)] text-4xl text-primary md:text-6xl">
-                {displayText}
-                <span className="animate-blink ml-0.5 inline-block h-8 w-0.5 bg-primary md:h-12" />
+          <h1 className="flex flex-col items-center gap-3 text-balance tracking-tight text-foreground md:gap-4">
+            <span className="font-[family-name:var(--font-cursive)] text-5xl leading-[1.1] md:text-7xl">
+              Chat with
+            </span>
+            <span className="flex items-center gap-3">
+              <span className="text-4xl font-light text-muted-foreground md:text-5xl">any</span>
+              <span className="relative h-14 min-w-[200px] md:h-16 md:min-w-[280px]">
+                <span className="font-[family-name:var(--font-cursive)] text-4xl text-primary md:text-6xl">
+                  {displayText}
+                  <span className="animate-blink ml-0.5 inline-block h-8 w-0.5 bg-primary md:h-12" />
+                </span>
               </span>
             </span>
           </h1>
 
-          <p className="mt-5 max-w-xl text-pretty text-sm leading-relaxed text-muted-foreground md:text-base">
+          <p className="mt-6 max-w-xl text-pretty text-sm leading-relaxed text-muted-foreground md:text-base">
             Turn any article or video into dialogue.
           </p>
 

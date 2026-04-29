@@ -3,7 +3,6 @@
 import Link from "next/link"
 import { useState } from "react"
 import { createClient } from "@/lib/supabase/client"
-import { Button } from "@/components/ui/button"
 import { Sparkles, Menu, X } from "lucide-react"
 import { GoogleIcon } from "@/components/google-icon"
 
@@ -36,7 +35,7 @@ export function SiteHeader() {
       </Link>
 
       {/* Desktop Navigation */}
-      <nav className="hidden items-center gap-6 md:flex">
+      <nav className="hidden items-center gap-8 md:flex">
         <Link 
           href="/about" 
           className="text-sm text-muted-foreground transition-colors hover:text-foreground"
@@ -49,15 +48,14 @@ export function SiteHeader() {
         >
           Pricing
         </Link>
-        <Button 
+        <button 
           onClick={handleGoogleSignIn} 
           disabled={loading}
-          size="sm"
-          className="gap-2 bg-foreground text-background hover:bg-foreground/90"
+          className="flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
         >
           <GoogleIcon className="h-3.5 w-3.5" />
           {loading ? "..." : "Sign in"}
-        </Button>
+        </button>
       </nav>
 
       {/* Mobile Menu Button */}
@@ -91,15 +89,14 @@ export function SiteHeader() {
             >
               Pricing
             </Link>
-            <Button 
+            <button 
               onClick={handleGoogleSignIn} 
               disabled={loading}
-              size="sm"
-              className="w-full gap-2 bg-foreground text-background hover:bg-foreground/90"
+              className="flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
             >
               <GoogleIcon className="h-3.5 w-3.5" />
               {loading ? "..." : "Sign in"}
-            </Button>
+            </button>
           </nav>
         </div>
       )}

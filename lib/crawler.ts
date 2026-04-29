@@ -3,6 +3,7 @@ import * as cheerio from "cheerio"
 export type ArticleLink = {
   url: string
   title: string
+  author?: string
 }
 
 export type CrawlResult = {
@@ -10,12 +11,14 @@ export type CrawlResult = {
   articles: ArticleLink[]
   mainTitle: string
   siteName?: string
+  authorName?: string
 }
 
 export type ParsedArticle = {
   url: string
   title: string
   content: string
+  author?: string
   success: boolean
   error?: string
 }
@@ -27,15 +30,10 @@ const BROWSER_HEADERS = {
     "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
   "Accept-Language": "en-US,en;q=0.9",
   "Cache-Control": "no-cache",
-  "Sec-Fetch-Dest": "document",
-  "Sec-Fetch-Mode": "navigate",
-  "Sec-Fetch-Site": "none",
-  "Sec-Fetch-User": "?1",
-  "Upgrade-Insecure-Requests": "1",
 }
 
 /**
- * Detect if a URL is an archive/index/tag page (vs a single article)
+ * Detect if a URL is an archive/index/tag page
  */
 export function isLikelyIndexPage(url: string): boolean {
   const u = new URL(url)
@@ -43,8 +41,8 @@ export function isLikelyIndexPage(url: string): boolean {
   
   // Substack patterns
   if (u.hostname.includes("substack.com")) {
-    if (path.startsWith("/t/") || path === "/" || path === "/archive") return true
-    if (!path.startsWith("/p/")) return true // Substack articles are /p/slug
+    if (path.startsWith("/t/") || path === "/" || path.startsWith("/archive")) return true
+    if (!path.startsWith("/p/")) return true
   }
   
   // Medium patterns
@@ -61,9 +59,66 @@ export function isLikelyIndexPage(url: string): boolean {
 }
 
 /**
+ * Try to get articles from Substack RSS feed (more complete than HTML scraping)
+ */
+async function trySubstackRSS(url: string): Promise<CrawlResult | null> {
+  try {
+    const u = new URL(url)
+    if (!u.hostname.includes("substack.com")) return null
+    
+    // Build RSS feed URL
+    const feedUrl = `https://${u.hostname}/feed`
+    
+    const res = await fetch(feedUrl, {
+      headers: { "User-Agent": BROWSER_HEADERS["User-Agent"] },
+      signal: AbortSignal.timeout(10_000),
+    })
+    
+    if (!res.ok) return null
+    
+    const xml = await res.text()
+    const $ = cheerio.load(xml, { xmlMode: true })
+    
+    const channelTitle = $("channel > title").first().text().trim()
+    const authorName = $("channel > dc\\:creator, channel > author").first().text().trim() ||
+                       channelTitle.replace(/ on Substack$/i, "").trim()
+    
+    const articles: ArticleLink[] = []
+    
+    $("item").each((_, el) => {
+      const title = $(el).find("title").text().trim()
+      const link = $(el).find("link").text().trim()
+      
+      if (title && link && link.includes("/p/")) {
+        articles.push({ url: link, title, author: authorName })
+      }
+    })
+    
+    if (articles.length === 0) return null
+    
+    return {
+      isIndexPage: true,
+      articles: articles.slice(0, 50), // RSS typically has 50+ articles
+      mainTitle: channelTitle || "Newsletter Archive",
+      siteName: u.hostname.replace(".substack.com", ""),
+      authorName,
+    }
+  } catch {
+    return null
+  }
+}
+
+/**
  * Extract article links from an index/archive page
  */
 export async function extractArticleLinks(url: string): Promise<CrawlResult> {
+  // Try RSS first for Substack (gets more articles)
+  const rssResult = await trySubstackRSS(url)
+  if (rssResult && rssResult.articles.length > 0) {
+    return rssResult
+  }
+  
+  // Fall back to HTML scraping
   const res = await fetch(url, {
     headers: BROWSER_HEADERS,
     redirect: "follow",
@@ -83,30 +138,30 @@ export async function extractArticleLinks(url: string): Promise<CrawlResult> {
     "Archive"
 
   const siteName = $('meta[property="og:site_name"]').attr("content")?.trim()
+  
+  // Try to extract author name
+  const authorName = 
+    $('meta[name="author"]').attr("content")?.trim() ||
+    $('meta[property="article:author"]').attr("content")?.trim() ||
+    $(".author-name, .byline-name, [rel='author']").first().text().trim() ||
+    siteName?.replace(/ on Substack$/i, "").trim()
 
   const baseUrl = new URL(url)
   const articles: ArticleLink[] = []
   const seenUrls = new Set<string>()
 
-  // Find article links - prioritize common patterns
   const linkSelectors = [
-    // Substack
     'a[data-testid="post-preview-title"]',
     '.post-preview a',
     '.post-preview-title a',
-    // Medium
     'article a[data-post-id]',
     'article a[aria-label]',
-    // Generic blog patterns
     'article a[href*="/p/"]',
     'article a[href*="/post/"]',
-    'article a[href*="/blog/"]',
     '.post-title a',
     '.entry-title a',
     'h2 a[href]',
     'h3 a[href]',
-    '.article-link',
-    '.post a[href]',
   ]
 
   for (const selector of linkSelectors) {
@@ -118,17 +173,11 @@ export async function extractArticleLinks(url: string): Promise<CrawlResult> {
         const fullUrl = new URL(href, baseUrl).href
         const linkUrl = new URL(fullUrl)
         
-        // Only same domain
         if (linkUrl.hostname !== baseUrl.hostname) return
-        
-        // Skip navigation, tags, archive links
         if (linkUrl.pathname.match(/\/(tag|category|archive|about|contact|subscribe|signin|login)/i)) return
-        
-        // Skip if already seen
         if (seenUrls.has(fullUrl)) return
         seenUrls.add(fullUrl)
 
-        // Get title from link text or nearby heading
         let title = $(el).text().trim()
         if (!title || title.length < 5) {
           title = $(el).closest("article, .post, .entry").find("h2, h3, .title").first().text().trim()
@@ -137,54 +186,21 @@ export async function extractArticleLinks(url: string): Promise<CrawlResult> {
           title = linkUrl.pathname.split("/").pop()?.replace(/-/g, " ") || "Untitled"
         }
 
-        articles.push({ url: fullUrl, title })
+        articles.push({ url: fullUrl, title, author: authorName })
       } catch {
-        // Invalid URL, skip
+        // Skip invalid URLs
       }
     })
     
-    // Stop if we have enough articles
-    if (articles.length >= 30) break
-  }
-
-  // If no articles found with specific selectors, try generic approach
-  if (articles.length === 0) {
-    $("a[href]").each((_, el) => {
-      const href = $(el).attr("href")
-      if (!href) return
-
-      try {
-        const fullUrl = new URL(href, baseUrl).href
-        const linkUrl = new URL(fullUrl)
-        
-        if (linkUrl.hostname !== baseUrl.hostname) return
-        if (seenUrls.has(fullUrl)) return
-        
-        // Look for article-like URLs
-        if (linkUrl.pathname.match(/\/(p|post|posts|article|articles|blog)\//i) ||
-            linkUrl.pathname.match(/\/\d{4}\/\d{2}\//)) { // Date-based URLs
-          seenUrls.add(fullUrl)
-          
-          let title = $(el).text().trim()
-          if (!title || title.length < 5) {
-            title = linkUrl.pathname.split("/").pop()?.replace(/-/g, " ") || "Untitled"
-          }
-          
-          articles.push({ url: fullUrl, title })
-        }
-      } catch {
-        // Skip
-      }
-      
-      if (articles.length >= 30) return false
-    })
+    if (articles.length >= 50) break
   }
 
   return {
     isIndexPage: articles.length > 1,
-    articles: articles.slice(0, 30), // Cap at 30 articles
+    articles: articles.slice(0, 50),
     mainTitle,
     siteName,
+    authorName,
   }
 }
 
@@ -210,12 +226,15 @@ export async function parseArticle(url: string): Promise<ParsedArticle> {
       $('meta[property="og:title"]').attr("content")?.trim() ||
       $("title").first().text().trim() ||
       "Untitled"
+    
+    const author = 
+      $('meta[name="author"]').attr("content")?.trim() ||
+      $('meta[property="article:author"]').attr("content")?.trim() ||
+      $(".author-name, .byline-name, [rel='author']").first().text().trim()
 
-    // Remove non-content elements
     $("script, style, noscript, iframe, nav, footer, header, aside, form, button").remove()
     $('[role="navigation"], [role="banner"], [role="contentinfo"]').remove()
 
-    // Try common article containers
     const candidates = ["article", '[role="main"]', "main", ".post-content", ".entry-content", ".article-body"]
     let text = ""
     for (const selector of candidates) {
@@ -235,18 +254,14 @@ export async function parseArticle(url: string): Promise<ParsedArticle> {
       return { url, title, content: "", success: false, error: "Content too short" }
     }
 
-    // Cap each article at 15k chars
     const capped = cleaned.slice(0, 15_000)
 
-    return { url, title, content: capped, success: true }
+    return { url, title, content: capped, author, success: true }
   } catch (e) {
     return { url, title: "", content: "", success: false, error: e instanceof Error ? e.message : "Unknown error" }
   }
 }
 
-/**
- * Rate-limited delay
- */
 export function delay(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms))
 }
