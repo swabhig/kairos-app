@@ -82,7 +82,7 @@ export function ChatView({ conversation, user }: { conversation: ActiveConversat
           {messages.length === 0 ? (
             <div className="flex flex-col gap-3 rounded-lg border border-dashed border-border bg-card/40 p-5">
               <p className="text-sm leading-relaxed text-muted-foreground">
-                {user.name ? `Hey ${user.name.split(" ")[0]}, ask` : "Ask"} anything about this {conversation.source_type === "youtube" ? "video" : "article"}. Every answer
+                {user.name ? `Hey ${user.name.split(" ")[0]} 👋 Ask` : "Ask"} anything about this {conversation.source_type === "youtube" ? "video" : "article"}. Every answer
                 will be grounded in the content you provided.
               </p>
               <div className="flex flex-wrap gap-2">

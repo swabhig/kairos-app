@@ -104,3 +104,13 @@
   mask-image: radial-gradient(ellipse 80% 70% at 50% 30%, black 20%, transparent 100%);
   -webkit-mask-image: radial-gradient(ellipse 80% 70% at 50% 30%, black 20%, transparent 100%);
 }
+
+/* Blinking cursor for typewriter */
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+.animate-blink {
+  animation: blink 0.8s step-end infinite;
+}

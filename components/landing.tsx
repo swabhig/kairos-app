@@ -1,14 +1,54 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { createClient } from "@/lib/supabase/client"
 import { Button } from "@/components/ui/button"
-import { Sparkles, Link2, Youtube, MessageSquare, ArrowRight, ChevronDown } from "lucide-react"
+import { Link2, Youtube, MessageSquare, ArrowRight, ChevronDown } from "lucide-react"
 import { GoogleIcon } from "@/components/google-icon"
+import { SiteHeader } from "@/components/site-header"
+import { SiteFooter } from "@/components/site-footer"
+
+const ROTATING_WORDS = ["podcast", "article", "newsletter", "blog"]
 
 export function Landing() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [wordIndex, setWordIndex] = useState(0)
+  const [displayText, setDisplayText] = useState("")
+  const [isTyping, setIsTyping] = useState(true)
+
+  // Typewriter effect
+  useEffect(() => {
+    const currentWord = ROTATING_WORDS[wordIndex]
+    
+    if (isTyping) {
+      // Typing forward
+      if (displayText.length < currentWord.length) {
+        const timeout = setTimeout(() => {
+          setDisplayText(currentWord.slice(0, displayText.length + 1))
+        }, 80) // Fast typing
+        return () => clearTimeout(timeout)
+      } else {
+        // Pause at end, then start erasing
+        const timeout = setTimeout(() => {
+          setIsTyping(false)
+        }, 1500)
+        return () => clearTimeout(timeout)
+      }
+    } else {
+      // Erasing backward
+      if (displayText.length > 0) {
+        const timeout = setTimeout(() => {
+          setDisplayText(displayText.slice(0, -1))
+        }, 50) // Fast erasing
+        return () => clearTimeout(timeout)
+      } else {
+        // Move to next word
+        setWordIndex((prev) => (prev + 1) % ROTATING_WORDS.length)
+        setIsTyping(true)
+      }
+    }
+  }, [displayText, isTyping, wordIndex])
 
   async function handleGoogleSignIn() {
     setLoading(true)
@@ -18,8 +58,7 @@ export function Landing() {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
-          redirectTo:
-            process.env.NEXT_PUBLIC_DEV_SUPABASE_REDIRECT_URL ?? `${window.location.origin}/auth/callback`,
+          redirectTo: `${window.location.origin}/auth/callback`,
         },
       })
       if (error) throw error
@@ -37,17 +76,7 @@ export function Landing() {
         className="bg-grid-pattern bg-grid-fade pointer-events-none absolute inset-0 -z-10"
       />
       
-      <header className="relative z-10 flex shrink-0 items-center justify-between px-6 py-4 md:px-10">
-        <div className="flex items-center gap-2.5">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-primary to-primary/70 text-primary-foreground shadow-lg shadow-primary/20">
-            <Sparkles className="h-4 w-4" aria-hidden="true" />
-          </div>
-          <span className="font-mono text-sm font-medium tracking-wide text-foreground">VERBE</span>
-        </div>
-        <Button variant="ghost" size="sm" onClick={handleGoogleSignIn} disabled={loading}>
-          Sign in
-        </Button>
-      </header>
+      <SiteHeader />
 
       <section className="relative z-10 flex flex-1 flex-col items-center justify-center px-6">
         {/* Ambient glow */}
@@ -59,17 +88,16 @@ export function Landing() {
         <div className="relative z-10 mx-auto flex w-full max-w-3xl flex-col items-center text-center">
           <span className="mb-5 inline-flex items-center gap-2 rounded-full border border-border bg-card px-3 py-1 text-xs text-muted-foreground">
             <span className="h-1.5 w-1.5 rounded-full bg-primary" aria-hidden="true" />
-            MVP — Blogs & YouTube
+            MVP — limited access
           </span>
 
           <h1 className="flex flex-col items-center gap-2 text-balance tracking-tight text-foreground md:gap-3">
-            <span className="text-5xl font-semibold leading-[0.95] md:text-7xl">Chat with</span>
-            <span className="relative inline-block font-[family-name:var(--font-cursive)] text-4xl font-normal leading-[1.1] text-primary md:text-6xl">
-              <span className="relative z-10 px-2">timeless wisdom</span>
-              <span
-                aria-hidden="true"
-                className="absolute inset-x-0 bottom-1 -z-0 h-3 bg-primary/30 md:bottom-2 md:h-5"
-              />
+            <span className="text-5xl font-semibold leading-[0.95] md:text-7xl">Chat with any</span>
+            <span className="relative h-16 md:h-20">
+              <span className="font-[family-name:var(--font-cursive)] text-4xl text-primary md:text-6xl">
+                {displayText}
+                <span className="animate-blink ml-0.5 inline-block h-8 w-0.5 bg-primary md:h-12" />
+              </span>
             </span>
           </h1>
 
@@ -111,23 +139,12 @@ export function Landing() {
           <ArrowRight className="h-3.5 w-3.5" />
           <span className="flex items-center gap-1.5">
             <MessageSquare className="h-3.5 w-3.5 text-primary" />
-            Start chatting
+            Start talking
           </span>
         </div>
       </section>
 
-      <footer className="shrink-0 border-t border-border px-6 py-4 text-center text-xs text-muted-foreground md:px-10">
-        An effort to give back to the CS community. For feedback, connect on{" "}
-        <a
-          href="https://wa.me/919810040184"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-foreground underline underline-offset-4 hover:text-primary"
-        >
-          WhatsApp
-        </a>
-        .
-      </footer>
+      <SiteFooter />
     </main>
   )
 }
