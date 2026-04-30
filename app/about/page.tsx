@@ -69,7 +69,7 @@ export default function AboutPage() {
 
             {/* Bio */}
             <p className="max-w-sm text-base leading-relaxed text-muted-foreground">
-              CS leader, builder at heart, curious mind. Passionate about products, customers, and meaningful conversations.
+              6+ years in CS and product. Builder at heart, curious mind. Passionate about products and customer success.
             </p>
 
             {/* Divider */}
