@@ -39,11 +39,12 @@ export default function AboutPage() {
 
           {/* Profile */}
           <div className="flex flex-col items-center gap-5">
-            <div className="h-40 w-40 overflow-hidden rounded-full border-2 border-primary/30 shadow-2xl md:h-48 md:w-48">
+            <div className="h-40 w-40 overflow-hidden rounded-full border-3 border-primary/30 shadow-2xl md:h-48 md:w-48">
               <img 
                 src="/images/swabhi-profile.jpg" 
                 alt="Swabhi Gupta"
-                className="h-[250%] w-[250%] max-w-none object-cover object-[50%_15%]"
+                className="h-full w-full object-cover object-center"
+                style={{ objectPosition: "center 35%" }}
               />
             </div>
             
