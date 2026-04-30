@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import Link from "next/link"
 import { Menu, X } from "lucide-react"
 import { ConversationSidebar, type ConversationSummary } from "@/components/conversation-sidebar"
 import { SourceInput } from "@/components/source-input"
@@ -170,7 +171,9 @@ export function KairosApp({
           >
             {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
-          <span className="font-mono text-xs tracking-wide text-muted-foreground">VERBE</span>
+          <Link href="/" className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground">
+            <span aria-hidden="true">&larr;</span> home
+          </Link>
           <UserMenu user={user} compact />
         </header>
 

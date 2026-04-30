@@ -5,6 +5,7 @@ import type React from "react"
 import { useEffect, useRef, useState, useMemo } from "react"
 import { useChat } from "@ai-sdk/react"
 import { DefaultChatTransport } from "ai"
+import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Link2, Youtube, ExternalLink, Send, Loader2 } from "lucide-react"
 import { cn } from "@/lib/utils"
@@ -105,6 +106,12 @@ export function ChatView({ conversation, user }: { conversation: ActiveConversat
               <ExternalLink className="h-3 w-3 shrink-0" aria-hidden="true" />
             </a>
           </div>
+          <Link
+            href="/"
+            className="hidden shrink-0 items-center gap-1 text-xs text-muted-foreground transition-colors hover:text-foreground md:flex"
+          >
+            <span aria-hidden="true">&larr;</span> home
+          </Link>
         </div>
       </div>
 

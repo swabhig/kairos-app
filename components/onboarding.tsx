@@ -1,14 +1,22 @@
 "use client"
 
 import { useState } from "react"
+import Link from "next/link"
 import { createClient } from "@/lib/supabase/client"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 
 export function OnboardingWrapper() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background px-4">
-      <OnboardingForm />
+    <div className="flex min-h-screen flex-col bg-background">
+      <header className="flex shrink-0 items-center px-6 py-4">
+        <Link href="/" className="flex items-center gap-1 text-sm text-muted-foreground transition-colors hover:text-foreground">
+          <span aria-hidden="true">&larr;</span> back to home
+        </Link>
+      </header>
+      <div className="flex flex-1 items-center justify-center px-4">
+        <OnboardingForm />
+      </div>
     </div>
   )
 }

@@ -24,8 +24,9 @@ export default function AboutPage() {
           <span className="font-mono text-sm font-medium tracking-wide text-foreground">VERBE</span>
         </Link>
         <nav className="flex items-center gap-6">
-          <Link href="/about" className="text-sm text-foreground">About</Link>
-          <Link href="/" className="text-sm text-muted-foreground hover:text-foreground">Sign in</Link>
+          <Link href="/" className="flex items-center gap-1 text-sm text-muted-foreground transition-colors hover:text-foreground">
+            <span aria-hidden="true">&larr;</span> back to home
+          </Link>
         </nav>
       </header>
 
