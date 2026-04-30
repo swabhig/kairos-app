@@ -44,8 +44,8 @@ export default function AboutPage() {
               <img 
                 src="/images/swabhi-profile.jpg" 
                 alt="Swabhi Gupta"
-                className="h-full w-full object-cover object-center"
-                style={{ objectPosition: "center 35%" }}
+                className="scale-[2.5] object-cover"
+                style={{ objectPosition: "center 28%" }}
               />
             </div>
             
@@ -76,24 +76,15 @@ export default function AboutPage() {
 
             {/* CS Communities */}
             <div className="mt-6 border-t border-border/50 pt-6">
-              <p className="mb-3 text-xs uppercase tracking-wider text-muted-foreground/60">Member of</p>
-              <div className="space-y-2 text-sm text-muted-foreground">
-                <div>
-                  <a href="https://www.womenofcustomersuccess.com/" target="_blank" rel="noopener noreferrer" className="font-medium text-foreground hover:text-primary underline underline-offset-2">Women of Customer Success</a>
-                  <p className="text-xs mt-0.5">Global community of CS leaders</p>
-                </div>
-                <div>
-                  <a href="https://www.linkedin.com/groups/2877523/" target="_blank" rel="noopener noreferrer" className="font-medium text-foreground hover:text-primary underline underline-offset-2">Customer Success Network</a>
-                  <p className="text-xs mt-0.5">Largest CS professional community</p>
-                </div>
-                <div>
-                  <a href="https://www.successhubcommunity.com/" target="_blank" rel="noopener noreferrer" className="font-medium text-foreground hover:text-primary underline underline-offset-2">Success Hub</a>
-                  <p className="text-xs mt-0.5">Customer success practitioners network</p>
-                </div>
-                <div>
-                  <a href="https://womenofcs.carrd.co/" target="_blank" rel="noopener noreferrer" className="font-medium text-foreground hover:text-primary underline underline-offset-2">WomenOfCS</a>
-                  <p className="text-xs mt-0.5">Women in customer success & community building</p>
-                </div>
+              <p className="mb-2 text-xs uppercase tracking-wider text-muted-foreground/60">Member of</p>
+              <div className="flex flex-wrap justify-center gap-x-4 gap-y-1 text-xs text-muted-foreground">
+                <a href="https://www.womenofcustomersuccess.com/" target="_blank" rel="noopener noreferrer" className="hover:text-foreground">Women of Customer Success</a>
+                <span className="text-border">·</span>
+                <a href="https://www.linkedin.com/groups/2877523/" target="_blank" rel="noopener noreferrer" className="hover:text-foreground">CS Network</a>
+                <span className="text-border">·</span>
+                <a href="https://www.successhubcommunity.com/" target="_blank" rel="noopener noreferrer" className="hover:text-foreground">Success Hub</a>
+                <span className="text-border">·</span>
+                <a href="https://womenofcs.carrd.co/" target="_blank" rel="noopener noreferrer" className="hover:text-foreground">WomenOfCS</a>
               </div>
             </div>
           </div>
