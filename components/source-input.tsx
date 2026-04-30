@@ -45,7 +45,7 @@ export function SourceInput({ onCreated, userName }: { onCreated: (c: CreatedCon
     try {
       // For YouTube, use the simple parse endpoint
       if (isYoutube) {
-        setProgress({ phase: "single", message: "Fetching transcript..." })
+        setProgress({ phase: "single", message: "Fetching transcript... 0%", current: 0, total: 100 })
         const res = await fetch("/api/parse", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -184,8 +184,8 @@ export function SourceInput({ onCreated, userName }: { onCreated: (c: CreatedCon
             <div className="flex items-center justify-between text-sm">
               <span className="text-muted-foreground">{progress.message}</span>
               {progress.total && progress.total > 1 && (
-                <span className="text-muted-foreground">
-                  {progress.current || 0}/{progress.total}
+                <span className="font-medium text-primary">
+                  {Math.round(((progress.current || 0) / progress.total) * 100)}%
                 </span>
               )}
             </div>

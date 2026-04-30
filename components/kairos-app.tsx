@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { Menu, X } from "lucide-react"
 import { ConversationSidebar, type ConversationSummary } from "@/components/conversation-sidebar"
 import { SourceInput } from "@/components/source-input"
 import { ChatView } from "@/components/chat-view"
@@ -34,6 +35,7 @@ export function KairosApp({
   const [conversations, setConversations] = useState<ConversationSummary[]>(initialConversations)
   const [active, setActive] = useState<ActiveConversation | null>(null)
   const [loadingConvoId, setLoadingConvoId] = useState<string | null>(null)
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   async function handleSelect(id: string) {
     if (active?.id === id) return
@@ -115,18 +117,48 @@ export function KairosApp({
 
   return (
     <div className="flex h-screen overflow-hidden bg-background">
-      <ConversationSidebar
-        user={user}
-        conversations={conversations}
-        activeId={active?.id ?? null}
-        loadingId={loadingConvoId}
-        onSelect={handleSelect}
-        onNew={handleNew}
-        onDelete={handleDelete}
-      />
+      {/* Mobile menu backdrop */}
+      {mobileMenuOpen && (
+        <div
+          className="fixed inset-0 z-40 bg-black/20 md:hidden"
+          onClick={() => setMobileMenuOpen(false)}
+          aria-hidden="true"
+        />
+      )}
+
+      {/* Sidebar - hidden on mobile unless menu open */}
+      <div
+        className={`absolute inset-y-0 left-0 z-50 w-64 transform border-r border-border bg-sidebar transition-transform md:relative md:z-0 md:transform-none ${
+          mobileMenuOpen ? "translate-x-0" : "-translate-x-full"
+        }`}
+      >
+        <ConversationSidebar
+          user={user}
+          conversations={conversations}
+          activeId={active?.id ?? null}
+          loadingId={loadingConvoId}
+          onSelect={(id) => {
+            handleSelect(id)
+            setMobileMenuOpen(false)
+          }}
+          onNew={() => {
+            handleNew()
+            setMobileMenuOpen(false)
+          }}
+          onDelete={handleDelete}
+        />
+      </div>
 
       <main className="flex min-h-0 flex-1 flex-col">
+        {/* Mobile header */}
         <header className="flex shrink-0 items-center justify-between border-b border-border px-4 py-3 md:px-6 md:hidden">
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="text-muted-foreground hover:text-foreground"
+            aria-label="Toggle menu"
+          >
+            {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </button>
           <span className="font-mono text-xs tracking-wide text-muted-foreground">VERBE</span>
           <UserMenu user={user} compact />
         </header>

@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { createClient } from "@/lib/supabase/client"
 import { Button } from "@/components/ui/button"
 import {
@@ -11,11 +11,31 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { LogOut } from "lucide-react"
+import { LogOut, Moon, Sun } from "lucide-react"
 import type { KairosUser } from "@/components/kairos-app"
 
 export function UserMenu({ user, compact = false }: { user: KairosUser; compact?: boolean }) {
   const [loading, setLoading] = useState(false)
+  const [theme, setTheme] = useState<"light" | "dark" | null>(null)
+
+  useEffect(() => {
+    // Get current theme
+    const isDark = document.documentElement.classList.contains("dark")
+    setTheme(isDark ? "dark" : "light")
+  }, [])
+
+  function toggleTheme() {
+    const isDark = document.documentElement.classList.contains("dark")
+    if (isDark) {
+      document.documentElement.classList.remove("dark")
+      localStorage.setItem("theme", "light")
+      setTheme("light")
+    } else {
+      document.documentElement.classList.add("dark")
+      localStorage.setItem("theme", "dark")
+      setTheme("dark")
+    }
+  }
 
   async function handleSignOut() {
     setLoading(true)
@@ -57,6 +77,20 @@ export function UserMenu({ user, compact = false }: { user: KairosUser; compact?
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-56">
         <DropdownMenuLabel className="truncate">{user.email ?? user.name}</DropdownMenuLabel>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem onClick={toggleTheme}>
+          {theme === "dark" ? (
+            <>
+              <Sun className="mr-2 h-4 w-4" aria-hidden="true" />
+              Light mode
+            </>
+          ) : (
+            <>
+              <Moon className="mr-2 h-4 w-4" aria-hidden="true" />
+              Dark mode
+            </>
+          )}
+        </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={handleSignOut} disabled={loading}>
           <LogOut className="mr-2 h-4 w-4" aria-hidden="true" />
