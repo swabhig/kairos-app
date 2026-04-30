@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { supabase } from "@/lib/supabase/client"
+import { createClient } from "@/lib/supabase/client"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 
@@ -26,6 +26,7 @@ function OnboardingForm() {
     setLoading(true)
 
     try {
+      const supabase = createClient()
       const {
         data: { user },
       } = await supabase.auth.getUser()

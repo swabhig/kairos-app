@@ -126,9 +126,9 @@ export function KairosApp({
         />
       )}
 
-      {/* Sidebar - hidden on mobile unless menu open */}
+      {/* Mobile Sidebar Overlay */}
       <div
-        className={`absolute inset-y-0 left-0 z-50 w-64 transform border-r border-border bg-sidebar transition-transform md:relative md:z-0 md:transform-none ${
+        className={`fixed inset-y-0 left-0 z-50 w-72 transform border-r border-border bg-sidebar transition-transform md:hidden ${
           mobileMenuOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
@@ -148,6 +148,17 @@ export function KairosApp({
           onDelete={handleDelete}
         />
       </div>
+
+      {/* Desktop Sidebar - Always visible */}
+      <ConversationSidebar
+        user={user}
+        conversations={conversations}
+        activeId={active?.id ?? null}
+        loadingId={loadingConvoId}
+        onSelect={handleSelect}
+        onNew={handleNew}
+        onDelete={handleDelete}
+      />
 
       <main className="flex min-h-0 flex-1 flex-col">
         {/* Mobile header */}

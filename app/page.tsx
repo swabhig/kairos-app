@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server"
 import { Landing } from "@/components/landing"
 import { KairosApp } from "@/components/kairos-app"
+import { OnboardingWrapper } from "@/components/onboarding"
 
 export default async function HomePage() {
   const supabase = await createClient()
@@ -10,6 +11,18 @@ export default async function HomePage() {
 
   if (!user) {
     return <Landing />
+  }
+
+  // Check if user has completed onboarding
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("full_name, onboarding_completed")
+    .eq("id", user.id)
+    .single()
+
+  // Show onboarding if not completed
+  if (!profile?.onboarding_completed) {
+    return <OnboardingWrapper />
   }
 
   // Load user's saved conversations (RLS keeps this scoped automatically)
@@ -24,7 +37,7 @@ export default async function HomePage() {
       user={{
         id: user.id,
         email: user.email ?? null,
-        name: (user.user_metadata?.full_name as string | undefined) ?? null,
+        name: profile?.full_name ?? (user.user_metadata?.full_name as string | undefined) ?? null,
         avatar: (user.user_metadata?.avatar_url as string | undefined) ?? null,
       }}
       initialConversations={conversations ?? []}
