@@ -29,41 +29,41 @@ export default function AboutPage() {
       </header>
 
       {/* Content - vertically centered, no scroll */}
-      <section className="flex flex-1 flex-col items-center justify-center px-4 text-center sm:px-6">
-        <div className="w-full max-w-2xl space-y-7">
+      <section className="flex flex-1 flex-col items-center justify-center px-6 text-center">
+        <div className="w-full max-w-xl space-y-5">
 
           {/* Quote */}
-          <p className="font-[family-name:var(--font-cursive)] text-xl text-muted-foreground sm:text-2xl">
+          <p className="font-[family-name:var(--font-cursive)] text-2xl text-muted-foreground">
             {'"content into conversation == questions into clarity"'}
           </p>
 
-          {/* Profile photo - zoomed in on face */}
-          <div className="mx-auto h-32 w-32 overflow-hidden rounded-full border-2 border-primary/30 shadow-2xl sm:h-40 sm:w-40">
+          {/* Profile photo */}
+          <div className="mx-auto h-36 w-36 overflow-hidden rounded-full border-2 border-primary/30 shadow-xl">
             <img
               src="/images/swabhi-profile.jpg"
               alt="Swabhi Gupta"
               className="h-full w-full object-cover"
-              style={{ objectPosition: "center 25%", transform: "scale(1.4)" }}
+              style={{ objectPosition: "48% 18%", transform: "scale(1.6)" }}
             />
           </div>
 
           {/* Name */}
-          <h2 className="font-[family-name:var(--font-cursive)] text-5xl text-foreground sm:text-6xl md:text-7xl">
+          <h2 className="font-[family-name:var(--font-cursive)] text-6xl text-foreground">
             Swabhi Gupta
           </h2>
 
           {/* Bio */}
-          <p className="text-base leading-relaxed text-muted-foreground sm:text-lg">
+          <p className="text-lg leading-relaxed text-muted-foreground">
             CS leader, builder at heart, curious mind. Passionate about turning customer conversations into clarity — and products into habits.
           </p>
 
           {/* Divider */}
-          <div className="border-t border-border/40" />
+          <div className="mx-auto w-16 border-t border-border/60" />
 
           {/* Companies */}
           <div>
-            <p className="mb-2 text-xs uppercase tracking-widest text-muted-foreground/50 sm:text-sm">Worked at</p>
-            <div className="flex flex-wrap justify-center gap-x-4 gap-y-1 text-sm text-muted-foreground sm:text-base">
+            <p className="mb-1.5 text-xs uppercase tracking-widest text-muted-foreground/50">Worked at</p>
+            <div className="flex flex-wrap justify-center gap-x-4 gap-y-1 text-base text-muted-foreground">
               <a href="https://gupshup.io" target="_blank" rel="noopener noreferrer" className="hover:text-foreground">Gupshup</a>
               <span className="text-border">·</span>
               <a href="https://vidyo.ai" target="_blank" rel="noopener noreferrer" className="hover:text-foreground">vidyo.ai</a>
@@ -73,12 +73,12 @@ export default function AboutPage() {
           </div>
 
           {/* Divider */}
-          <div className="border-t border-border/40" />
+          <div className="mx-auto w-16 border-t border-border/60" />
 
           {/* Communities */}
           <div>
-            <p className="mb-2 text-xs uppercase tracking-widest text-muted-foreground/50 sm:text-sm">Part of</p>
-            <div className="flex flex-wrap justify-center gap-x-4 gap-y-1 text-sm text-muted-foreground sm:text-base">
+            <p className="mb-1.5 text-xs uppercase tracking-widest text-muted-foreground/50">Part of</p>
+            <div className="flex flex-wrap justify-center gap-x-4 gap-y-1 text-base text-muted-foreground">
               <a href="https://www.womenofcustomersuccess.com/" target="_blank" rel="noopener noreferrer" className="hover:text-foreground">Women of CS</a>
               <span className="text-border">·</span>
               <a href="https://www.linkedin.com/groups/2877523/" target="_blank" rel="noopener noreferrer" className="hover:text-foreground">CS Network</a>
@@ -90,12 +90,12 @@ export default function AboutPage() {
           </div>
 
           {/* Divider */}
-          <div className="border-t border-border/40" />
+          <div className="mx-auto w-16 border-t border-border/60" />
 
           {/* Connect */}
           <div>
-            <p className="mb-2 text-xs uppercase tracking-widest text-muted-foreground/50 sm:text-sm">Connect with me</p>
-            <div className="flex flex-wrap justify-center gap-x-4 gap-y-1 text-sm text-muted-foreground sm:text-base">
+            <p className="mb-1.5 text-xs uppercase tracking-widest text-muted-foreground/50">Connect with me</p>
+            <div className="flex flex-wrap justify-center gap-x-4 gap-y-1 text-base text-muted-foreground">
               <a href="https://linkedin.com/in/swabhi-gupta" target="_blank" rel="noopener noreferrer" className="hover:text-foreground">LinkedIn</a>
               <span className="text-border">·</span>
               <a href="https://twitter.com/guptaswabhi" target="_blank" rel="noopener noreferrer" className="hover:text-foreground">Twitter</a>
