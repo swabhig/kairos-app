@@ -28,81 +28,81 @@ export default function AboutPage() {
         </Link>
       </header>
 
-      {/* Content - vertically centered, no scroll */}
-      <section className="flex flex-1 flex-col items-center justify-center px-6 text-center">
-        <div className="w-full max-w-xl space-y-5">
-
-          {/* Quote */}
-          <p className="font-[family-name:var(--font-cursive)] text-2xl text-muted-foreground">
-            {'"content into conversation == questions into clarity"'}
-          </p>
-
-          {/* Profile photo */}
-          <div className="mx-auto h-36 w-36 overflow-hidden rounded-full border-2 border-primary/30 shadow-xl">
-            <img
-              src="/images/swabhi-profile.jpg"
-              alt="Swabhi Gupta"
-              className="h-full w-full object-cover"
-              style={{ objectPosition: "48% 18%", transform: "scale(1.6)" }}
-            />
-          </div>
-
-          {/* Name */}
-          <h2 className="font-[family-name:var(--font-cursive)] text-6xl text-foreground">
-            Swabhi Gupta
-          </h2>
-
-          {/* Bio */}
-          <p className="text-lg leading-relaxed text-muted-foreground">
-            CS leader, builder at heart, curious mind. Passionate about turning customer conversations into clarity — and products into habits.
-          </p>
-
-          {/* Divider */}
-          <div className="mx-auto w-16 border-t border-border/60" />
-
-          {/* Companies */}
-          <div>
-            <p className="mb-1.5 text-xs uppercase tracking-widest text-muted-foreground/50">Worked at</p>
-            <div className="flex flex-wrap justify-center gap-x-4 gap-y-1 text-base text-muted-foreground">
-              <a href="https://gupshup.io" target="_blank" rel="noopener noreferrer" className="hover:text-foreground">Gupshup</a>
-              <span className="text-border">·</span>
-              <a href="https://vidyo.ai" target="_blank" rel="noopener noreferrer" className="hover:text-foreground">vidyo.ai</a>
-              <span className="text-border">·</span>
-              <a href="https://motherson.com" target="_blank" rel="noopener noreferrer" className="hover:text-foreground">Motherson</a>
+      {/* Content - two column layout */}
+      <section className="flex flex-1 items-center justify-center px-6">
+        <div className="flex w-full max-w-4xl flex-col gap-12 md:flex-row md:items-center md:gap-16">
+          
+          {/* Left: About Verbe */}
+          <div className="flex-1 space-y-6">
+            <h1 className="font-[family-name:var(--font-cursive)] text-5xl text-foreground md:text-6xl">
+              Verbe
+            </h1>
+            <p className="font-[family-name:var(--font-cursive)] text-xl text-primary">
+              {'"content into conversation == questions into clarity"'}
+            </p>
+            <div className="space-y-4 text-base leading-relaxed text-muted-foreground">
+              <p>
+                Verbe turns any newsletter, podcast, or article into a conversation. 
+                Paste a link, ask questions, and get answers grounded in the content.
+              </p>
+              <p>
+                No more skimming. No more losing insights. 
+                Just clarity from the content you care about.
+              </p>
             </div>
           </div>
 
           {/* Divider */}
-          <div className="mx-auto w-16 border-t border-border/60" />
+          <div className="hidden h-48 w-px bg-border/60 md:block" />
+          <div className="mx-auto w-24 border-t border-border/60 md:hidden" />
 
-          {/* Communities */}
-          <div>
-            <p className="mb-1.5 text-xs uppercase tracking-widest text-muted-foreground/50">Part of</p>
-            <div className="flex flex-wrap justify-center gap-x-4 gap-y-1 text-base text-muted-foreground">
-              <a href="https://www.womenofcustomersuccess.com/" target="_blank" rel="noopener noreferrer" className="hover:text-foreground">Women of CS</a>
-              <span className="text-border">·</span>
-              <a href="https://www.linkedin.com/groups/2877523/" target="_blank" rel="noopener noreferrer" className="hover:text-foreground">CS Network</a>
-              <span className="text-border">·</span>
-              <a href="https://www.successhubcommunity.com/" target="_blank" rel="noopener noreferrer" className="hover:text-foreground">Success Hub</a>
-              <span className="text-border">·</span>
-              <a href="https://womenofcs.carrd.co/" target="_blank" rel="noopener noreferrer" className="hover:text-foreground">WomenOfCS</a>
+          {/* Right: Built by */}
+          <div className="flex flex-col items-center space-y-4 text-center md:w-64">
+            <p className="text-xs uppercase tracking-widest text-muted-foreground/60">Built by</p>
+            
+            {/* Profile photo */}
+            <div className="h-24 w-24 overflow-hidden rounded-full border-2 border-primary/30 shadow-lg">
+              <img
+                src="/images/swabhi-profile.jpg"
+                alt="Swabhi Gupta"
+                className="h-full w-full object-cover"
+                style={{ objectPosition: "48% 18%", transform: "scale(1.6)" }}
+              />
             </div>
-          </div>
 
-          {/* Divider */}
-          <div className="mx-auto w-16 border-t border-border/60" />
+            {/* Name */}
+            <h2 className="font-[family-name:var(--font-cursive)] text-3xl text-foreground">
+              Swabhi Gupta
+            </h2>
 
-          {/* Connect */}
-          <div>
-            <p className="mb-1.5 text-xs uppercase tracking-widest text-muted-foreground/50">Connect with me</p>
-            <div className="flex flex-wrap justify-center gap-x-4 gap-y-1 text-base text-muted-foreground">
+            {/* Quick bio */}
+            <p className="text-sm text-muted-foreground">
+              CS leader & builder
+            </p>
+
+            {/* Companies & Communities inline */}
+            <div className="space-y-2 text-xs text-muted-foreground">
+              <p>
+                <span className="text-muted-foreground/50">at </span>
+                <a href="https://gupshup.io" target="_blank" rel="noopener noreferrer" className="hover:text-foreground">Gupshup</a>
+                {" · "}
+                <a href="https://vidyo.ai" target="_blank" rel="noopener noreferrer" className="hover:text-foreground">vidyo.ai</a>
+                {" · "}
+                <a href="https://motherson.com" target="_blank" rel="noopener noreferrer" className="hover:text-foreground">Motherson</a>
+              </p>
+              <p>
+                <span className="text-muted-foreground/50">in </span>
+                <a href="https://www.womenofcustomersuccess.com/" target="_blank" rel="noopener noreferrer" className="hover:text-foreground">Women of CS</a>
+                {" · "}
+                <a href="https://www.linkedin.com/groups/2877523/" target="_blank" rel="noopener noreferrer" className="hover:text-foreground">CS Network</a>
+              </p>
+            </div>
+
+            {/* Connect */}
+            <div className="flex gap-4 pt-2 text-sm text-muted-foreground">
               <a href="https://linkedin.com/in/swabhi-gupta" target="_blank" rel="noopener noreferrer" className="hover:text-foreground">LinkedIn</a>
-              <span className="text-border">·</span>
               <a href="https://twitter.com/guptaswabhi" target="_blank" rel="noopener noreferrer" className="hover:text-foreground">Twitter</a>
-              <span className="text-border">·</span>
               <a href="https://github.com/swabhig" target="_blank" rel="noopener noreferrer" className="hover:text-foreground">GitHub</a>
-              <span className="text-border">·</span>
-              <a href="https://wa.me/919810040184" target="_blank" rel="noopener noreferrer" className="hover:text-foreground">WhatsApp</a>
             </div>
           </div>
 
