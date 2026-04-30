@@ -25,47 +25,64 @@ export default function AboutPage() {
         </Link>
         <nav className="flex items-center gap-6">
           <Link href="/about" className="text-sm text-foreground">About</Link>
-          <Link href="/pricing" className="text-sm text-muted-foreground hover:text-foreground">Pricing</Link>
           <Link href="/" className="text-sm text-muted-foreground hover:text-foreground">Sign in</Link>
         </nav>
       </header>
 
       <section className="flex flex-1 flex-col items-center justify-center px-6 py-16 md:px-10">
-        <div className="mx-auto w-full max-w-md text-center">
+        <div className="mx-auto w-full max-w-lg text-center">
           
-          {/* Minimal Cursive Text */}
-          <p className="mb-16 font-[family-name:var(--font-cursive)] text-2xl leading-relaxed text-muted-foreground md:text-3xl">
-            content into conversation<br />
-            questions into clarity
+          {/* Quote */}
+          <p className="mb-16 font-[family-name:var(--font-cursive)] text-xl text-muted-foreground md:text-2xl">
+            {'"content into conversation == questions into clarity"'}
           </p>
 
           {/* Profile */}
-          <div className="flex flex-col items-center gap-4">
-            <div className="h-20 w-20 overflow-hidden rounded-full border-2 border-primary/30 shadow-lg">
+          <div className="flex flex-col items-center gap-5">
+            <div className="h-28 w-28 overflow-hidden rounded-full border-2 border-primary/30 shadow-xl md:h-32 md:w-32">
               <img 
-                src="https://media.licdn.com/dms/image/v2/D5603AQFcOO1_yEbNdA/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1719558571157?e=1753920000&v=beta&t=7JQB8U5MInrVrMZiIZlMpK3_JY2bRnR5Bt3G3M_UYJY" 
+                src="/images/swabhi-profile.jpg" 
                 alt="Swabhi Gupta"
                 className="h-full w-full object-cover"
               />
             </div>
             
-            <p className="font-[family-name:var(--font-cursive)] text-xl text-foreground">
+            <h2 className="font-[family-name:var(--font-cursive)] text-3xl text-foreground md:text-4xl">
               Swabhi Gupta
+            </h2>
+
+            {/* Bio */}
+            <p className="max-w-sm text-sm leading-relaxed text-muted-foreground">
+              Customer Success professional with 6+ years in SaaS. Builder at heart, curious mind, and community advocate. Passionate about products, customers, and meaningful conversations.
             </p>
 
-            <div className="flex gap-4 text-xs text-muted-foreground">
+            {/* Social Links */}
+            <div className="flex gap-5 text-sm text-muted-foreground">
               <a href="https://linkedin.com/in/swabhi-gupta" target="_blank" rel="noopener noreferrer" className="hover:text-foreground">LinkedIn</a>
               <a href="https://twitter.com/guptaswabhi" target="_blank" rel="noopener noreferrer" className="hover:text-foreground">Twitter</a>
               <a href="https://github.com/swabhig" target="_blank" rel="noopener noreferrer" className="hover:text-foreground">GitHub</a>
             </div>
 
-            <p className="mt-2 text-xs text-muted-foreground">
+            {/* Companies */}
+            <p className="text-xs text-muted-foreground">
               <a href="https://gupshup.io" target="_blank" rel="noopener noreferrer" className="hover:text-foreground">Gupshup</a>
               {" · "}
               <a href="https://vidyo.ai" target="_blank" rel="noopener noreferrer" className="hover:text-foreground">vidyo.ai</a>
               {" · "}
               <a href="https://motherson.com" target="_blank" rel="noopener noreferrer" className="hover:text-foreground">Motherson</a>
             </p>
+
+            {/* CS Communities */}
+            <div className="mt-4 border-t border-border/50 pt-4">
+              <p className="mb-2 text-xs uppercase tracking-wider text-muted-foreground/60">Communities</p>
+              <div className="flex flex-wrap justify-center gap-3 text-xs text-muted-foreground">
+                <a href="https://www.womenofcustomersuccess.com/" target="_blank" rel="noopener noreferrer" className="hover:text-foreground">Women of Customer Success</a>
+                <span className="text-border">·</span>
+                <a href="https://www.linkedin.com/company/customer-success-network/" target="_blank" rel="noopener noreferrer" className="hover:text-foreground">CS Network</a>
+                <span className="text-border">·</span>
+                <a href="https://www.linkedin.com/company/success-hub-community/" target="_blank" rel="noopener noreferrer" className="hover:text-foreground">Success Hub</a>
+              </div>
+            </div>
           </div>
         </div>
       </section>

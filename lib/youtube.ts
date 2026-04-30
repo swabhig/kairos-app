@@ -207,8 +207,10 @@ export async function fetchYoutubeTranscript(url: string): Promise<YoutubeResult
   
   if (!transcript || transcript.length < 50) {
     throw new Error(
-      "Could not fetch a transcript for this video. This video may not have captions available, " +
-      "or the captions may be restricted. Try a video with manually added captions."
+      "Could not fetch transcript. YouTube blocks cloud server requests for many videos. " +
+      "This works best with: (1) Videos with manually-added captions (not auto-generated), " +
+      "(2) Educational/conference videos, (3) Podcasts with proper subtitles. " +
+      "Most auto-captioned videos from individual creators are restricted."
     )
   }
 

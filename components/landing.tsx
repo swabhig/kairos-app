@@ -82,9 +82,6 @@ export function Landing() {
           <Link href="/about" className="text-sm text-muted-foreground transition-colors hover:text-foreground">
             About
           </Link>
-          <Link href="/pricing" className="text-sm text-muted-foreground transition-colors hover:text-foreground">
-            Pricing
-          </Link>
           <button 
             onClick={handleGoogleSignIn} 
             disabled={loading}
