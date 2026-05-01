@@ -86,6 +86,8 @@ export default function AboutPage() {
                 <a href="https://vidyo.ai" target="_blank" rel="noopener noreferrer" className="hover:text-foreground">vidyo.ai</a>
                 <span className="text-border">·</span>
                 <a href="https://motherson.com" target="_blank" rel="noopener noreferrer" className="hover:text-foreground">Motherson</a>
+                <span className="text-border">·</span>
+                <a href="https://tracxn.com/d/legal-entities/india/ekeekaran-ventures-private-limited" target="_blank" rel="noopener noreferrer" className="hover:text-foreground">Ekeekaran Ventures</a>
               </div>
             </div>
 
