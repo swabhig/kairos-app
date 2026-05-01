@@ -1,6 +1,5 @@
 import { Metadata } from "next"
 import Link from "next/link"
-import { Sparkles } from "lucide-react"
 
 export const metadata: Metadata = {
   title: "About — Verbe",
@@ -18,9 +17,11 @@ export default function AboutPage() {
       {/* Header */}
       <header className="flex shrink-0 items-center justify-between px-6 py-4 md:px-10">
         <Link href="/" className="flex items-center gap-2.5">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-primary to-primary/70 text-primary-foreground shadow-lg shadow-primary/20">
-            <Sparkles className="h-4 w-4" aria-hidden="true" />
-          </div>
+          <img 
+            src="/images/verbe-logo.jpg" 
+            alt="Verbe logo" 
+            className="h-8 w-8 rounded-lg shadow-lg shadow-primary/20"
+          />
           <span className="font-mono text-sm font-medium tracking-wide text-foreground">VERBE</span>
         </Link>
         <Link href="/" className="flex items-center gap-1 text-sm text-muted-foreground transition-colors hover:text-foreground">
@@ -36,6 +37,7 @@ export default function AboutPage() {
           <div className="flex flex-1 flex-col justify-center space-y-5 py-8 md:pr-12">
             <h1 className="font-[family-name:var(--font-cursive)] text-5xl text-foreground md:text-6xl">
               Verbe
+              <span className="ml-2 text-xs font-normal text-muted-foreground/60">(French: word, to speak)</span>
             </h1>
             <p className="font-[family-name:var(--font-cursive)] text-xl text-primary">
               {'"content into conversation == questions into clarity"'}
@@ -58,7 +60,7 @@ export default function AboutPage() {
                 src="/images/swabhi-profile.jpg"
                 alt="Swabhi Gupta"
                 className="h-full w-full object-cover"
-                style={{ objectPosition: "48% 18%", transform: "scale(1.6)" }}
+                style={{ objectPosition: "48% 22%", transform: "scale(1.6)" }}
               />
             </div>
 
@@ -69,7 +71,7 @@ export default function AboutPage() {
 
             {/* Bio */}
             <p className="max-w-sm text-base leading-relaxed text-muted-foreground">
-              6+ years in CS and product. Builder at heart, curious mind. Passionate about products and customer success.
+              6+ years in Customer Success. Builder at heart, curious mind, product believer. Passionate about helping customers succeed.
             </p>
 
             {/* Divider */}

@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import Link from "next/link"
 import { createClient } from "@/lib/supabase/client"
 import { Button } from "@/components/ui/button"
-import { Link2, Youtube, MessageSquare, ArrowRight, ChevronDown, Sparkles } from "lucide-react"
+import { Link2, FileText, MessageSquare, ArrowRight, ChevronDown, Sparkles } from "lucide-react"
 import { GoogleIcon } from "@/components/google-icon"
 
 const ROTATING_WORDS = ["podcasts", "articles", "newsletters", "blogs"]
@@ -72,9 +72,11 @@ export function Landing() {
       {/* Simple Header */}
       <header className="relative z-50 flex shrink-0 items-center justify-between px-6 py-4 md:px-10">
         <Link href="/" className="flex items-center gap-2.5">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-primary to-primary/70 text-primary-foreground shadow-lg shadow-primary/20">
-            <Sparkles className="h-4 w-4" aria-hidden="true" />
-          </div>
+          <img 
+            src="/images/verbe-logo.jpg" 
+            alt="Verbe logo" 
+            className="h-8 w-8 rounded-lg shadow-lg shadow-primary/20"
+          />
           <span className="font-mono text-sm font-medium tracking-wide text-foreground">VERBE</span>
         </Link>
 
@@ -148,7 +150,7 @@ export function Landing() {
           </span>
           <ArrowRight className="h-3.5 w-3.5" />
           <span className="flex items-center gap-1.5">
-            <Youtube className="h-3.5 w-3.5 text-primary" />
+            <FileText className="h-3.5 w-3.5 text-primary" />
             We parse it
           </span>
           <ArrowRight className="h-3.5 w-3.5" />

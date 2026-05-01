@@ -6,8 +6,11 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group"
 import { Progress } from "@/components/ui/progress"
-import { Sparkles, Link2, Youtube, ArrowRight, Loader2, FileText } from "lucide-react"
-import { fetchYoutubeTranscript, extractVideoId } from "@/lib/youtube"
+import { Sparkles, Link2, ArrowRight, Loader2, FileText } from "lucide-react"
+
+function isYoutubeUrl(url: string): boolean {
+  return /(?:youtube\.com|youtu\.be)/i.test(url)
+}
 
 type CreatedConversation = {
   id: string
@@ -32,8 +35,7 @@ export function SourceInput({ onCreated, userName }: { onCreated: (c: CreatedCon
   const [error, setError] = useState<string | null>(null)
   const [progress, setProgress] = useState<CrawlProgress | null>(null)
 
-  const isYoutube = /(?:youtube\.com|youtu\.be)/i.test(url) && !!extractVideoId(url)
-  const Icon = isYoutube ? Youtube : Link2
+  const Icon = Link2
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -43,22 +45,9 @@ export function SourceInput({ onCreated, userName }: { onCreated: (c: CreatedCon
     setProgress(null)
 
     try {
-      // For YouTube, use the simple parse endpoint
-      if (isYoutube) {
-        setProgress({ phase: "single", message: "Fetching transcript... 0%", current: 0, total: 100 })
-        const res = await fetch("/api/parse", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ url: url.trim() }),
-        })
-        const data = (await res.json()) as { conversation?: CreatedConversation; error?: string }
-        if (!res.ok || !data.conversation) {
-          throw new Error(data.error || "Could not parse that URL.")
-        }
-        setUrl("")
-        setProgress(null)
-        onCreated(data.conversation)
-        return
+      // Check for YouTube URLs and show coming soon message
+      if (isYoutubeUrl(url)) {
+        throw new Error("Looks like you entered a YouTube link — this feature is coming soon! For now, try pasting an article or blog post instead.")
       }
 
       // For URLs, use the crawl endpoint with SSE
@@ -143,7 +132,7 @@ export function SourceInput({ onCreated, userName }: { onCreated: (c: CreatedCon
           {userName ? `${userName.split(" ")[0]}, what do you want to explore today? 👋` : "What do you want to explore today?"}
         </h1>
         <p className="mt-3 max-w-lg text-pretty text-sm leading-relaxed text-muted-foreground md:text-base">
-          Paste a blog post, newsletter archive, or YouTube link. Verbe will parse all articles and open a conversation.
+          Paste a blog post or newsletter archive. Verbe will parse all articles and open a conversation.
         </p>
 
         <form onSubmit={handleSubmit} className="mt-8 w-full">
@@ -155,7 +144,7 @@ export function SourceInput({ onCreated, userName }: { onCreated: (c: CreatedCon
               type="url"
               value={url}
               onChange={(e) => setUrl(e.target.value)}
-              placeholder="https://newsletter.substack.com/t/topic or https://youtu.be/..."
+              placeholder="https://newsletter.substack.com/archive or any blog post URL..."
               required
               disabled={loading}
               aria-label="Source URL"
@@ -206,7 +195,7 @@ export function SourceInput({ onCreated, userName }: { onCreated: (c: CreatedCon
           </p>
         ) : null}
 
-        <div className="mt-8 grid w-full grid-cols-1 gap-3 sm:grid-cols-3">
+        <div className="mt-8 grid w-full grid-cols-1 gap-3 sm:grid-cols-2">
           <Hint
             icon={<FileText className="h-3.5 w-3.5" />}
             label="Newsletter archives"
@@ -216,11 +205,6 @@ export function SourceInput({ onCreated, userName }: { onCreated: (c: CreatedCon
             icon={<Link2 className="h-3.5 w-3.5" />}
             label="Single articles"
             body="Or paste any blog post URL for a focused conversation."
-          />
-          <Hint
-            icon={<Youtube className="h-3.5 w-3.5" />}
-            label="YouTube videos"
-            body="We pull the transcript from videos with captions."
           />
         </div>
       </div>
