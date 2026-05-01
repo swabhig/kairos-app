@@ -71,7 +71,9 @@ export default function AboutPage() {
 
             {/* Bio */}
             <p className="max-w-sm text-base leading-relaxed text-muted-foreground">
-              6+ years in Customer Success across India, Middle East, Singapore, North America, and Canada. Builder at heart, curious mind, product believer. Passionate about helping customers succeed.
+              6+ years in Customer Success across India, Middle East, Singapore, North America, and Canada.
+              <br className="my-1" />
+              Builder at heart, curious mind, product believer. Passionate about helping customers succeed.
             </p>
 
             {/* Divider */}
