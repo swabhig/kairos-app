@@ -10,8 +10,11 @@ const _caveat = Caveat({ subsets: ["latin"], variable: "--font-cursive" })
 export const metadata: Metadata = {
   title: "Verbe — Chat with any newsletter",
   description:
-    "Turn any article or YouTube video into an AI-guided conversation. Extract insights, explore ideas, and capture wisdom.",
+    "Turn any article into an AI-guided conversation. Extract insights, explore ideas, and capture wisdom.",
   generator: "v0.app",
+  icons: {
+    icon: "/images/verbe-logo.jpg",
+}
 }
 
 export default function RootLayout({
